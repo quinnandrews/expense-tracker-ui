@@ -17,7 +17,7 @@ const arrangement = (props) => {
             <header>
                 <nav className="navbar navbar-expand-md navbar-light bg-light border-bottom">
                     <span className="navbar-brand">
-                        <a className="navbar-brand" href="#">Expense Tracker</a>
+                        <Link to={'/'} className="navbar-brand">Expense Tracker</Link>
                     </span>
                     <button className="navbar-toggler"
                             type="button"
