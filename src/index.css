@@ -1,0 +1,58 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Open Sans", sans-serif;
+}
+
+.navbar .active {
+    text-underline-position: under;
+    text-decoration: #ff7a00 underline;
+}
+
+div.stateMessage {
+    color: #ff7a00;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f8f9fa;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #c5e7ff;
+}
+
+.btn-secondary.focus, .btn-secondary:focus {
+    box-shadow: 0 0 0 0.2rem rgba(255,119,0,1);
+}
+
+/* Some customization of Tabs */
+
+.nav-tabs .nav-link {
+    color: #6c757d;
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+}
+
+.nav-tabs .nav-link.active {
+    color: #ff7a00 !important;
+    background-color: #ffffff;
+}
+
+.nav-tabs, .tab-pane {
+    max-width: 960px;
+    margin: 0 auto;
+}
+
+/* Footer */
+
+.footer-message {
+    font-size: 0.85rem;
+}
+
+@media(min-width:768px) {
+
+}
+
+@media(max-width:767px){
+
+}
