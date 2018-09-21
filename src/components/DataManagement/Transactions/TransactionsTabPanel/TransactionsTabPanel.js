@@ -277,6 +277,7 @@ class TransactionsTabPanel extends Component {
             const index = transactions.indexOf(transaction);
             const deletedTransaction = transactions.splice(index, 1);
             this.setTransactionList(transactions);
+            this.setListStateMessage('Deleted Transactions #' + deletedTransaction[0].id);
             if (transaction.id === this.getTransactionId()) {
                 // the transaction is loaded in the editor
                 // reset transactionId to mark as transient, but leave other values for user reference

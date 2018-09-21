@@ -272,6 +272,7 @@ class ItemsTabPanel extends Component {
             const index = items.indexOf(item);
             const deletedItem = items.splice(index, 1);
             this.setItemList(items);
+            this.setListStateMessage('Deleted Item #' + deletedItem[0].id);
             if (item.id === this.getItemId()) {
                 // the item is loaded in the editor
                 // reset itemId to mark as transient, but leave other values for user reference
