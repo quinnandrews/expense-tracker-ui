@@ -181,10 +181,10 @@ class ItemsTabPanel extends Component {
         let item = null;
         if (!this.isItemTransient()) {
             // persistent object - update
-            item = this.getItemList().find(i => i.id == this.state.itemId);
+            item = this.getItemList().find(i => i.id == this.getItemId());
             item.id = this.getItemId();
             item.name = this.getItemName();
-            item.category = this.getCategoryList().find(c => c.id == this.state.itemCategoryId);
+            item.category = this.getCategoryList().find(c => c.id == this.getItemId());
         } else {
             // transient object - insert
             item = {
@@ -199,7 +199,7 @@ class ItemsTabPanel extends Component {
             this.setItemId(newItemId);
             item.id = newItemId;
             item.name = this.getItemName();
-            item.category = this.getCategoryList().find(c => c.id == this.state.itemCategoryId);
+            item.category = this.getCategoryList().find(c => c.id == this.getItemCategoryId());
             this.getItemList().push(item);
         }
         console.log(item);

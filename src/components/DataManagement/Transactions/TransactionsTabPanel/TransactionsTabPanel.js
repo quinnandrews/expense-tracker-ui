@@ -3,7 +3,6 @@ import TransactionsHelpPanel from "../TransactionsHelpPanel/TransactionsHelpPane
 import TransactionsEditPanel from "../TransactionsEditPanel/TransactionsEditPanel";
 import TransactionsListPanel from "../TransactionsListPanel/TransactionsListPanel";
 import PropTypes from "prop-types";
-import ItemsTabPanel from "../../Items/ItemsTabPanel/ItemsTabPanel";
 
 const listTab = 'listTab';
 const editTab = 'editTab';
@@ -176,12 +175,12 @@ class TransactionsTabPanel extends Component {
     save = () => {
         console.log("save");
         let transaction = null;
-        if (this.isTransactionTransient()) {
+        if (!this.isTransactionTransient()) {
             // persistent object - update
-            transaction = this.getTransactionList().find(t => t.id == this.state.transactionId);
+            transaction = this.getTransactionList().find(t => t.id == this.getTransactionId());
             transaction.id = this.getTransactionId();
             transaction.date = this.getTransactionDate();
-            transaction.merchant = this.getMerchantList().find(m => m.id == this.state.transactionMerchantId);
+            transaction.merchant = this.getMerchantList().find(m => m.id == this.getTransactionMerchantId());
         } else {
             // transient object - insert
             transaction = {
@@ -196,7 +195,7 @@ class TransactionsTabPanel extends Component {
             this.setTransactionId(newTransactionId);
             transaction.id = newTransactionId;
             transaction.date = this.getTransactionDate();
-            transaction.merchant = this.getMerchantList().find(m => m.id == this.state.transactionMerchantId);
+            transaction.merchant = this.getMerchantList().find(m => m.id == this.getTransactionMerchantId());
             this.getTransactionList().push(transaction);
         }
         console.log(transaction);
@@ -315,7 +314,7 @@ class TransactionsTabPanel extends Component {
                         <a className={this.getSelectedTabClassName(listTab)}
                            id="list-tab"
                            data-toggle="tab"
-                           href="#list"
+                           href="#"
                            role="tab"
                            aria-controls="list"
                            aria-selected="true"
@@ -325,17 +324,17 @@ class TransactionsTabPanel extends Component {
                         <a className={this.getSelectedTabClassName(editTab)}
                            id="editor-tab"
                            data-toggle="tab"
-                           href="#editor"
+                           href="#"
                            role="tab"
                            aria-controls="editor"
                            aria-selected="false"
-                           onClick={() => this.setSelectedTab(editTab)}>EDIT</a>
+                           onClick={() => this.setSelectedTab(editTab)}>{this.getEditTabLabel()}</a>
                     </li>
                     <li className="nav-item">
                         <a className={this.getSelectedTabClassName(helpTab)}
                            id="guide-tab"
                            data-toggle="tab"
-                           href="#guide"
+                           href="#"
                            role="tab"
                            aria-controls="guide"
                            aria-selected="false"
