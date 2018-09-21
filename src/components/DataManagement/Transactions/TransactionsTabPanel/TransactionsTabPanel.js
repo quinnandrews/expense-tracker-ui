@@ -17,7 +17,7 @@ class TransactionsTabPanel extends Component {
         super(props);
         this.state = {
             transactionIdSequence: 3,
-            selectedTab: listTab,
+            selectedTab: null,
             editTabLabel: null,
             listStateMessage: null,
             editStateMessage: null,
@@ -71,7 +71,15 @@ class TransactionsTabPanel extends Component {
     /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PROPERTIES */
 
     isTabSelected(tab) {
-        return this.state.selectedTab === tab;
+        return this.getSelectedTab() === tab;
+    }
+
+    getSelectedTab() {
+        let tab = this.state.selectedTab;
+        if (tab === null) {
+            tab = listTab;
+        }
+        return tab;
     }
 
     setSelectedTab(tab) {
