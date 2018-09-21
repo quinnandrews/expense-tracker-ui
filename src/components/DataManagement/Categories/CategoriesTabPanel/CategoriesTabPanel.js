@@ -2,12 +2,14 @@ import React, {Component} from 'react';
 import CategoriesListPanel from "../CategoriesListPanel/CategoriesListPanel";
 import CategoriesEditPanel from "../CategoriesEditPanel/CategoriesEditPanel";
 import CategoriesHelpPanel from "../CategoriesHelpPanel/CategoriesHelpPanel";
+import PropTypes from "prop-types";
 
 const listTab = 'listTab';
 const editTab = 'editTab';
 const helpTab = 'helpTab';
 
-const defaultEditStateMessage = 'Creating New Category';
+const editTabCreateLabel = 'CREATE';
+const editTabEditLabel = 'EDIT';
 
 class CategoriesTabPanel extends Component {
 
@@ -15,9 +17,10 @@ class CategoriesTabPanel extends Component {
         super(props);
         this.state = {
             idSequence: 3,
-            selectedTab: listTab,
+            selectedTab: null,
+            editTabLabel: null,
             listStateMessage: null,
-            editStateMessage: defaultEditStateMessage,
+            editStateMessage: null,
             editFormIsDisabled: false,
             categoryId: 0,
             categoryName: '',
@@ -41,7 +44,15 @@ class CategoriesTabPanel extends Component {
     /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PROPERTIES */
 
     isTabSelected(tab) {
-        return this.state.selectedTab === tab;
+        return this.getSelectedTab() === tab;
+    }
+
+    getSelectedTab() {
+        let tab = this.state.selectedTab;
+        if (tab === null) {
+            tab = listTab;
+        }
+        return tab;
     }
 
     setSelectedTab(tab) {
@@ -56,6 +67,18 @@ class CategoriesTabPanel extends Component {
         return this.isTabSelected(tab) ? 'tab-pane fade show active' : 'tab-pane fade';
     }
 
+    getEditTabLabel() {
+        let label = this.state.editTabLabel;
+        if (label === null) {
+            label = editTabEditLabel;
+        }
+        return label;
+    }
+
+    setEditTabLabel(label) {
+        this.setState({editTabLabel: label});
+    }
+
     isEditFormDisabled() {
         return this.state.editFormIsDisabled;
     }
@@ -67,7 +90,7 @@ class CategoriesTabPanel extends Component {
     getListStateMessage() {
         let message = this.state.listStateMessage;
         if (message === null) {
-            message = 'Found ' + this.state.categoryList.length + ' Categories';
+            message = 'Found ' + this.getCategoryList().length + ' Categories';
         }
         return message;
     }
@@ -117,9 +140,9 @@ class CategoriesTabPanel extends Component {
     save = () => {
         console.log("save");
         let category = null;
-        if (this.state.categoryId !== 0) {
+        if (!this.isCategoryTransient()) {
             // persistent object - update
-            category = this.getCategoryList().find(c => c.id == this.state.categoryId);
+            category = this.getCategoryList().find(c => c.id == this.getCategoryId());
             category.id = this.getCategoryId();
             category.name = this.getCategoryName();
         } else {
@@ -127,7 +150,7 @@ class CategoriesTabPanel extends Component {
             category = {
                 id: null,
                 name: null
-            }
+            };
             const newCategoryId = ++this.state.idSequence;
             this.setCategoryId(newCategoryId);
             category.id = newCategoryId;
@@ -137,27 +160,37 @@ class CategoriesTabPanel extends Component {
         console.log(category);
         this.setEditStateMessage('Saved Category #' + category.id);
         this.setIsEditFormDisabled(true);
+        this.setEditTabLabel(editTabEditLabel);
     };
 
-    edit = () => {
+    edit = (id) => {
         console.log("edit");
-        if (!this.isCategoryTransient()) {
-            const category = this.getCategoryList().find(c => c.id == this.getCategoryId());
+        const category = this.getCategoryList().find(c => c.id == id);
+        if (category !== undefined) {
             this.setCategoryId(category.id);
             this.setCategoryName(category.name);
             this.setEditStateMessage('Editing Category #' + category.id);
             this.setIsEditFormDisabled(false);
+            this.setEditTabLabel(editTabEditLabel);
+            this.setSelectedTab(editTab);
+        } else {
+            // TODO - Report Not Found Error
         }
     };
 
-    clone = () => {
+    clone = (id) => {
         console.log("clone");
-        if (!this.isCategoryTransient()) {
-            const cloneName = 'COPY OF ' + this.getCategoryName();
+        const category = this.getCategoryList().find(c => c.id == id);
+        if (category !== undefined) {
+            const cloneName = 'COPY OF ' + category.name;
             this.setCategoryId(0);
             this.setCategoryName(cloneName);
             this.setEditStateMessage('Creating New Category From Clone');
             this.setIsEditFormDisabled(false);
+            this.setEditTabLabel(editTabCreateLabel);
+            this.setSelectedTab(editTab);
+        } else {
+            // TODO - Report Not Found Error
         }
     };
 
@@ -167,13 +200,14 @@ class CategoriesTabPanel extends Component {
         this.setCategoryName('');
         this.setEditStateMessage('Creating New Category');
         this.setIsEditFormDisabled(false);
+        this.setEditTabLabel(editTabCreateLabel);
     };
 
     revert = () => {
         console.log("revert");
         // if persistent ? revert to saved state : call create
         if (!this.isCategoryTransient()) {
-            this.edit();
+            this.edit(this.getCategoryId());
             this.setEditStateMessage('Reverted to Saved Version of Category #' + this.getCategoryId());
         } else {
             this.create();
@@ -181,46 +215,27 @@ class CategoriesTabPanel extends Component {
         }
     };
 
-    delete = () => {
+    delete = (id) => {
         console.log("delete");
         // TODO: check if any associated Transactions exist
-        if (!this.isCategoryTransient()) {
-            const categories = [...this.getCategoryList()];
-            const category = categories.find(c => c.id == this.getCategoryId());
+        const categories = [...this.getCategoryList()];
+        const category = categories.find(c => c.id == id);
+        if (category !== undefined) {
+            // remove the category from the list
             const index = categories.indexOf(category);
             const deletedCategory = categories.splice(index, 1);
             this.setCategoryList(categories);
-            this.create();
-            this.setEditStateMessage('Deleted Category #' + deletedCategory[0].id);
-            this.setIsEditFormDisabled(true);
+            this.setListStateMessage('Deleted Category #' + deletedCategory[0].id);
+            if (category.id === this.getCategoryId()) {
+                // the category is loaded in the editor
+                // reset categoryId to mark as transient, but leave other values for user reference
+                this.setCategoryId(0);
+                this.setEditStateMessage('Deleted Category #' + deletedCategory[0].id);
+                this.setIsEditFormDisabled(true);
+            }
+        } else {
+            // TODO - Report Not Found Error
         }
-    };
-
-    editFromList = (category) => {
-        console.log("editFromList");
-        this.setCategoryId(category.id);
-        this.setCategoryName(category.name);
-        this.setEditStateMessage('Editing Category #' + category.id);
-        this.setSelectedTab(editTab);
-        this.setIsEditFormDisabled(false);
-    };
-
-    cloneFromList = (category) => {
-        console.log("cloneFromList");
-        this.setCategoryId(0);
-        this.setCategoryName('COPY OF ' + category.name);
-        this.setEditStateMessage('Creating New Category From Clone');
-        this.setSelectedTab(editTab);
-        this.setIsEditFormDisabled(false);
-    };
-
-    deleteFromList = (index) => {
-        console.log("deleteFromList");
-        // TODO: check if any associated Transactions exist
-        const categories = [...this.getCategoryList()];
-        const deletedCategory = categories.splice(index, 1);
-        this.setCategoryList(categories);
-        this.setListStateMessage('Deleted Category #' + deletedCategory[0].id);
     };
 
     /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> VALUE CHANGE HANDLERS */
@@ -228,6 +243,17 @@ class CategoriesTabPanel extends Component {
     categoryNameChanged(event) {
         this.setCategoryName(event.target.value);
     };
+
+    /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> LIFECYCLE METHODS */
+
+    componentWillMount() {
+        const idParam = this.props.idParam;
+        if (idParam !== undefined) {
+            this.edit(Number.parseInt(idParam));
+        } else {
+            this.create();
+        }
+    }
 
     /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> RENDER METHOD */
 
@@ -255,7 +281,7 @@ class CategoriesTabPanel extends Component {
                            role="tab"
                            aria-controls="editor"
                            aria-selected="false"
-                           onClick={() => this.setSelectedTab(editTab)}>EDIT</a>
+                           onClick={() => this.setSelectedTab(editTab)}>{this.getEditTabLabel()}</a>
                     </li>
                     <li className="nav-item">
                         <a className={this.getSelectedTabClassName(helpTab)}
@@ -276,9 +302,9 @@ class CategoriesTabPanel extends Component {
                          aria-labelledby="list-tab">
                         <CategoriesListPanel listStateMessage={this.getListStateMessage()}
                                              categoryList={this.getCategoryList()}
-                                             editAction={this.editFromList}
-                                             cloneAction={this.cloneFromList}
-                                             deleteAction={this.deleteFromList}/>
+                                             editAction={this.edit}
+                                             cloneAction={this.clone}
+                                             deleteAction={this.delete}/>
                     </div>
                     <div className={this.getSelectedTabPaneClassName(editTab)}
                          id="editor"
@@ -309,5 +335,9 @@ class CategoriesTabPanel extends Component {
     }
 
 }
+
+CategoriesTabPanel.propTypes = {
+    idParam: PropTypes.string
+};
 
 export default CategoriesTabPanel;

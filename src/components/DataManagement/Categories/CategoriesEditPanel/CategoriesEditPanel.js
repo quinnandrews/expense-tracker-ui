@@ -24,7 +24,7 @@ const categoriesEditPanel = (props) => {
                         <Render if={props.isEditFormDisabled && !props.isCategoryTransient}>
                             <button type="button"
                                     className="btn btn-outline-secondary"
-                                    onClick={props.editAction}>
+                                    onClick={() => props.editAction(props.categoryId)}>
                                 <i className="fa fa-pencil pr-2 pl-2"
                                    aria-hidden="true"/>
                             </button>
@@ -32,7 +32,7 @@ const categoriesEditPanel = (props) => {
                         <Render if={!props.isCategoryTransient}>
                             <button type="button"
                                     className="btn btn-outline-secondary"
-                                    onClick={props.cloneAction}>
+                                    onClick={() => props.cloneAction(props.categoryId)}>
                                 <i className="fa fa-clone pr-2 pl-2"
                                    aria-hidden="true"/>
                             </button>
@@ -54,7 +54,7 @@ const categoriesEditPanel = (props) => {
                         <Render if={!props.isCategoryTransient}>
                             <button type="button"
                                     className="btn btn-outline-secondary"
-                                    onClick={props.deleteAction}>
+                                    onClick={() => props.deleteAction(props.categoryId)}>
                                 <i className="fa fa-trash pr-2 pl-2"
                                    aria-hidden="true"/>
                             </button>
@@ -74,7 +74,7 @@ const categoriesEditPanel = (props) => {
                                                className="form-control"
                                                id="categoryName"
                                                required={true}
-                                               maxLength={128}
+                                               maxLength={32}
                                                disabled={props.isEditFormDisabled}
                                                onChange={props.categoryNameChangeHandler}
                                                value={props.categoryName}/>
@@ -96,7 +96,7 @@ const categoriesEditPanel = (props) => {
                         <Render if={props.isEditFormDisabled && !props.isCategoryTransient}>
                             <button type="button"
                                     className="btn btn-secondary btn-block"
-                                    onClick={props.editAction}>
+                                    onClick={() => props.editAction(props.categoryId)}>
                                 <i className="fa fa-pencil pr-1 pl-1"
                                    aria-hidden="true"/>
                             </button>
@@ -104,7 +104,7 @@ const categoriesEditPanel = (props) => {
                         <Render if={!props.isCategoryTransient}>
                             <button type="button"
                                     className="btn btn-secondary btn-block"
-                                    onClick={props.cloneAction}>
+                                    onClick={() => props.cloneAction(props.categoryId)}>
                                 <i className="fa fa-clone pr-1 pl-1"
                                    aria-hidden="true"/>
                             </button>
@@ -126,7 +126,7 @@ const categoriesEditPanel = (props) => {
                         <Render if={!props.isCategoryTransient}>
                             <button type="button"
                                     className="btn btn-secondary btn-block"
-                                    onClick={props.deleteAction}>
+                                    onClick={() => props.deleteAction(props.categoryId)}>
                                 <i className="fa fa-trash pr-1 pl-1"
                                    aria-hidden="true"/>
                             </button>
