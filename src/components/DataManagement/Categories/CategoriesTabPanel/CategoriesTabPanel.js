@@ -175,6 +175,7 @@ class CategoriesTabPanel extends Component {
             this.setSelectedTab(editTab);
         } else {
             // TODO - Report Not Found Error
+            this.create();
         }
     };
 

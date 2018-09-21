@@ -175,6 +175,7 @@ class MerchantsTabPanel extends Component {
             this.setSelectedTab(editTab);
         } else {
             // TODO - Report Not Found Error
+            this.create();
         }
     };
 
@@ -233,6 +234,8 @@ class MerchantsTabPanel extends Component {
                 this.setEditStateMessage('Deleted Merchant #' + deletedMerchant[0].id);
                 this.setIsEditFormDisabled(true);
             }
+        } else {
+            // TODO - Report Not Found Error
         }
     };
 
