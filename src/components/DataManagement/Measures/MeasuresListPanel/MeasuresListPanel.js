@@ -30,34 +30,34 @@ const measuresListPanel = (props) => {
                                     <div className="d-block d-md-none">
                                         <button type="button"
                                                 className="btn btn-secondary btn-block mr-3"
-                                                onClick={() => props.editAction(measure)}>
+                                                onClick={() => props.editAction(measure.id)}>
                                             <i className="fa fa-pencil"/>
                                         </button>
                                         <button type="button"
                                                 className="btn btn-secondary btn-block mr-3"
-                                                onClick={() => props.cloneAction(measure)}>
+                                                onClick={() => props.cloneAction(measure.id)}>
                                             <i className="fa fa-clone"/>
                                         </button>
                                         <button type="button"
                                                 className="btn btn-secondary btn-block"
-                                                onClick={() => props.deleteAction(index)}>
+                                                onClick={() => props.deleteAction(measure.id)}>
                                             <i className="fa fa-trash"/>
                                         </button>
                                     </div>
                                     <div className="d-none d-md-block btn-group" role="group">
                                         <button type="button"
                                                 className="btn btn-outline-secondary"
-                                                onClick={() => props.editAction(measure)}>
+                                                onClick={() => props.editAction(measure.id)}>
                                             <i className="fa fa-pencil pr-2 pl-2"/>
                                         </button>
                                         <button type="button"
                                                 className="btn btn-outline-secondary"
-                                                onClick={() => props.cloneAction(measure)}>
+                                                onClick={() => props.cloneAction(measure.id)}>
                                             <i className="fa fa-clone pr-2 pl-2"/>
                                         </button>
                                         <button type="button"
                                                 className="btn btn-outline-secondary"
-                                                onClick={() => props.deleteAction(index)}>
+                                                onClick={() => props.deleteAction(measure.id)}>
                                             <i className="fa fa-trash pr-2 pl-2"/>
                                         </button>
                                     </div>

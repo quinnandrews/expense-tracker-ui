@@ -2,12 +2,14 @@ import React, {Component} from 'react';
 import MeasuresHelpPanel from "../MeasuresHelpPanel/MeasuresHelpPanel";
 import MeasuresEditPanel from "../MeasuresEditPanel/MeasuresEditPanel";
 import MeasuresListPanel from "../MeasuresListPanel/MeasuresListPanel";
+import PropTypes from "prop-types";
 
 const listTab = 'listTab';
 const editTab = 'editTab';
 const helpTab = 'helpTab';
 
-const defaultEditStateMessage = 'Creating New Measure';
+const editTabCreateLabel = 'CREATE';
+const editTabEditLabel = 'EDIT';
 
 class MeasuresTabPanel extends Component {
 
@@ -15,9 +17,10 @@ class MeasuresTabPanel extends Component {
         super(props);
         this.state = {
             idSequence: 3,
-            selectedTab: listTab,
+            selectedTab: null,
+            editTabLabel: null,
             listStateMessage: null,
-            editStateMessage: defaultEditStateMessage,
+            editStateMessage: null,
             editFormIsDisabled: false,
             measureId: 0,
             measureName: '',
@@ -45,7 +48,15 @@ class MeasuresTabPanel extends Component {
     /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PROPERTIES */
 
     isTabSelected(tab) {
-        return this.state.selectedTab === tab;
+        return this.getSelectedTab() === tab;
+    }
+
+    getSelectedTab() {
+        let tab = this.state.selectedTab;
+        if (tab === null) {
+            tab = listTab;
+        }
+        return tab;
     }
 
     setSelectedTab(tab) {
@@ -60,6 +71,18 @@ class MeasuresTabPanel extends Component {
         return this.isTabSelected(tab) ? 'tab-pane fade show active' : 'tab-pane fade';
     }
 
+    getEditTabLabel() {
+        let label = this.state.editTabLabel;
+        if (label === null) {
+            label = editTabEditLabel;
+        }
+        return label;
+    }
+
+    setEditTabLabel(label) {
+        this.setState({editTabLabel: label});
+    }
+
     isEditFormDisabled() {
         return this.state.editFormIsDisabled;
     }
@@ -71,7 +94,7 @@ class MeasuresTabPanel extends Component {
     getListStateMessage() {
         let message = this.state.listStateMessage;
         if (message === null) {
-            message = 'Found ' + this.state.measureList.length + ' Measures';
+            message = 'Found ' + this.getMeasureList().length + ' Measures';
         }
         return message;
     }
@@ -129,9 +152,9 @@ class MeasuresTabPanel extends Component {
     save = () => {
         console.log("save");
         let measure = null;
-        if (this.state.measureId !== 0) {
+        if (!this.isMeasureTransient()) {
             // persistent object - update
-            measure = this.getMeasureList().find(m => m.id == this.state.measureId);
+            measure = this.getMeasureList().find(m => m.id == this.getMeasureId());
             measure.id = this.getMeasureId();
             measure.name = this.getMeasureName();
             measure.symbol = this.getMeasureSymbol();
@@ -139,8 +162,9 @@ class MeasuresTabPanel extends Component {
             // transient object - insert
             measure = {
                 id: null,
-                name: null
-            }
+                name: null,
+                symbol: null
+            };
             const newMeasureId = ++this.state.idSequence;
             this.setMeasureId(newMeasureId);
             measure.id = newMeasureId;
@@ -151,27 +175,39 @@ class MeasuresTabPanel extends Component {
         console.log(measure);
         this.setEditStateMessage('Saved Measure #' + measure.id);
         this.setIsEditFormDisabled(true);
+        this.setEditTabLabel(editTabEditLabel);
     };
 
-    edit = () => {
+    edit = (id) => {
         console.log("edit");
-        if (!this.isMeasureTransient()) {
-            const measure = this.getMeasureList().find(m => m.id == this.getMeasureId());
+        const measure = this.getMeasureList().find(m => m.id == id);
+        if (measure !== undefined) {
             this.setMeasureId(measure.id);
             this.setMeasureName(measure.name);
+            this.setMeasureSymbol(measure.symbol);
             this.setEditStateMessage('Editing Measure #' + measure.id);
             this.setIsEditFormDisabled(false);
+            this.setEditTabLabel(editTabEditLabel);
+            this.setSelectedTab(editTab);
+        } else {
+            // TODO - Report Not Found Error
         }
     };
 
-    clone = () => {
+    clone = (id) => {
         console.log("clone");
-        if (!this.isMeasureTransient()) {
-            const cloneName = 'COPY OF ' + this.getMeasureName();
+        const measure = this.getMeasureList().find(m => m.id == id);
+        if (measure !== undefined) {
+            const cloneName = 'COPY OF ' + measure.name;
             this.setMeasureId(0);
             this.setMeasureName(cloneName);
+            this.setMeasureSymbol(measure.symbol)
             this.setEditStateMessage('Creating New Measure From Clone');
             this.setIsEditFormDisabled(false);
+            this.setEditTabLabel(editTabCreateLabel);
+            this.setSelectedTab(editTab);
+        } else {
+            // TODO - Report Not Found Error
         }
     };
 
@@ -182,13 +218,14 @@ class MeasuresTabPanel extends Component {
         this.setMeasureSymbol('');
         this.setEditStateMessage('Creating New Measure');
         this.setIsEditFormDisabled(false);
+        this.setEditTabLabel(editTabCreateLabel);
     };
 
     revert = () => {
         console.log("revert");
         // if persistent ? revert to saved state : call create
         if (!this.isMeasureTransient()) {
-            this.edit();
+            this.edit(this.getMeasureId());
             this.setEditStateMessage('Reverted to Saved Version of Measure #' + this.getMeasureId());
         } else {
             this.create();
@@ -196,48 +233,27 @@ class MeasuresTabPanel extends Component {
         }
     };
 
-    delete = () => {
+    delete = (id) => {
         console.log("delete");
         // TODO: check if any associated Transactions exist
-        if (!this.isMeasureTransient()) {
-            const measures = [...this.getMeasureList()];
-            const measure = measures.find(c => c.id == this.getMeasureId());
+        const measures = [...this.getMeasureList()];
+        const measure = measures.find(c => c.id == id);
+        if (measure !== undefined) {
+            // remove the measure from the list
             const index = measures.indexOf(measure);
             const deletedMeasure = measures.splice(index, 1);
             this.setMeasureList(measures);
-            this.create();
-            this.setEditStateMessage('Deleted Measure #' + deletedMeasure[0].id);
-            this.setIsEditFormDisabled(true);
+            this.setListStateMessage('Deleted Measure #' + deletedMeasure[0].id);
+            if (measure.id === this.getMeasureId()) {
+                // the measure is loaded in the editor
+                // reset mneasureId to mark as transient, but leave other values for user reference
+                this.setMeasureId(id);
+                this.setEditStateMessage('Deleted Measure #' + deletedMeasure[0].id);
+                this.setIsEditFormDisabled(true);
+            }
+        } else {
+            // TODO - Report Not Found Error
         }
-    };
-
-    editFromList = (measure) => {
-        console.log("editFromList");
-        this.setMeasureId(measure.id);
-        this.setMeasureName(measure.name);
-        this.setMeasureSymbol(measure.symbol);
-        this.setEditStateMessage('Editing Measure #' + measure.id);
-        this.setSelectedTab(editTab);
-        this.setIsEditFormDisabled(false);
-    };
-
-    cloneFromList = (measure) => {
-        console.log("cloneFromList");
-        this.setMeasureId(0);
-        this.setMeasureName('COPY OF ' + measure.name);
-        this.setMeasureSymbol(measure.symbol)
-        this.setEditStateMessage('Creating New Measure From Clone');
-        this.setSelectedTab(editTab);
-        this.setIsEditFormDisabled(false);
-    };
-
-    deleteFromList = (index) => {
-        console.log("deleteFromList");
-        // TODO: check if any associated Transactions exist
-        const measures = [...this.getMeasureList()];
-        const deletedMeasure = measures.splice(index, 1);
-        this.setMeasureList(measures);
-        this.setListStateMessage('Deleted Measure #' + deletedMeasure[0].id);
     };
 
     /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> VALUE CHANGE HANDLERS */
@@ -249,6 +265,17 @@ class MeasuresTabPanel extends Component {
     measureSymbolChanged(event) {
         this.setMeasureSymbol(event.target.value);
     };
+
+    /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> LIFECYCLE METHODS */
+
+    componentWillMount() {
+        const idParam = this.props.idParam;
+        if (idParam !== undefined) {
+            this.edit(Number.parseInt(idParam));
+        } else {
+            this.create();
+        }
+    }
 
     /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> RENDER METHOD */
 
@@ -276,7 +303,7 @@ class MeasuresTabPanel extends Component {
                            role="tab"
                            aria-controls="editor"
                            aria-selected="false"
-                           onClick={() => this.setSelectedTab(editTab)}>EDIT</a>
+                           onClick={() => this.setSelectedTab(editTab)}>{this.getEditTabLabel()}</a>
                     </li>
                     <li className="nav-item">
                         <a className={this.getSelectedTabClassName(helpTab)}
@@ -297,9 +324,9 @@ class MeasuresTabPanel extends Component {
                          aria-labelledby="list-tab">
                         <MeasuresListPanel listStateMessage={this.getListStateMessage()}
                                            measureList={this.getMeasureList()}
-                                           editAction={this.editFromList}
-                                           cloneAction={this.cloneFromList}
-                                           deleteAction={this.deleteFromList}/>
+                                           editAction={this.edit}
+                                           cloneAction={this.clone}
+                                           deleteAction={this.delete}/>
                     </div>
                     <div className={this.getSelectedTabPaneClassName(editTab)}
                          id="editor"
@@ -332,5 +359,9 @@ class MeasuresTabPanel extends Component {
     }
 
 }
+
+MeasuresTabPanel.propTypes = {
+    idParam: PropTypes.string
+};
 
 export default MeasuresTabPanel;

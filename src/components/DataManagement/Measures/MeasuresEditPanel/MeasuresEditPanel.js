@@ -24,7 +24,7 @@ const measuresEditPanel = (props) => {
                         <Render if={props.isEditFormDisabled && !props.isMeasureTransient}>
                             <button type="button"
                                     className="btn btn-outline-secondary"
-                                    onClick={props.editAction}>
+                                    onClick={() => props.editAction(props.measureId)}>
                                 <i className="fa fa-pencil pr-2 pl-2"
                                    aria-hidden="true"/>
                             </button>
@@ -32,7 +32,7 @@ const measuresEditPanel = (props) => {
                         <Render if={!props.isMeasureTransient}>
                             <button type="button"
                                     className="btn btn-outline-secondary"
-                                    onClick={props.cloneAction}>
+                                    onClick={() => props.cloneAction(props.measureId)}>
                                 <i className="fa fa-clone pr-2 pl-2"
                                    aria-hidden="true"/>
                             </button>
@@ -54,7 +54,7 @@ const measuresEditPanel = (props) => {
                         <Render if={!props.isMeasureTransient}>
                             <button type="button"
                                     className="btn btn-outline-secondary"
-                                    onClick={props.deleteAction}>
+                                    onClick={() => props.deleteAction(props.measureId)}>
                                 <i className="fa fa-trash pr-2 pl-2"
                                    aria-hidden="true"/>
                             </button>
@@ -74,7 +74,7 @@ const measuresEditPanel = (props) => {
                                                className="form-control"
                                                id="measureName"
                                                required={true}
-                                               maxLength={128}
+                                               maxLength={32}
                                                disabled={props.isEditFormDisabled}
                                                onChange={props.measureNameChangeHandler}
                                                value={props.measureName}/>
@@ -108,7 +108,7 @@ const measuresEditPanel = (props) => {
                         <Render if={props.isEditFormDisabled && !props.isMeasureTransient}>
                             <button type="button"
                                     className="btn btn-secondary btn-block"
-                                    onClick={props.editAction}>
+                                    onClick={() => props.editAction(props.measureId)}>
                                 <i className="fa fa-pencil pr-1 pl-1"
                                    aria-hidden="true"/>
                             </button>
@@ -116,7 +116,7 @@ const measuresEditPanel = (props) => {
                         <Render if={!props.isMeasureTransient}>
                             <button type="button"
                                     className="btn btn-secondary btn-block"
-                                    onClick={props.cloneAction}>
+                                    onClick={() => props.cloneAction(props.measureId)}>
                                 <i className="fa fa-clone pr-1 pl-1"
                                    aria-hidden="true"/>
                             </button>
@@ -138,7 +138,7 @@ const measuresEditPanel = (props) => {
                         <Render if={!props.isMeasureTransient}>
                             <button type="button"
                                     className="btn btn-secondary btn-block"
-                                    onClick={props.deleteAction}>
+                                    onClick={() => props.deleteAction(props.measureId)}>
                                 <i className="fa fa-trash pr-1 pl-1"
                                    aria-hidden="true"/>
                             </button>
