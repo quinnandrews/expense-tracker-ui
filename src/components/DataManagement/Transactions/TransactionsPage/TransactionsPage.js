@@ -3,11 +3,11 @@ import Arrangement from "../../../Common/Arrangement/Arrangement";
 import * as App from "../../../../App";
 import TransactionsTabPanel from "../TransactionsTabPanel/TransactionsTabPanel";
 
-const transactionsPage = () => {
+const transactionsPage = (props) => {
     return (
         <Arrangement pageName={App.transactionsPageName}
                      pageLabel={App.transactionsPageLabel}>
-            <TransactionsTabPanel/>
+            <TransactionsTabPanel idParam={props.match.params.id}/>
         </Arrangement>
     );
 };

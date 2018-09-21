@@ -10,6 +10,7 @@ import MeasuresPage from "./components/DataManagement/Measures/MeasuresPage/Meas
 import MerchantsPage from "./components/DataManagement/Merchants/MerchantsPage/MerchantsPage";
 
 const contextPath = '/expense-tracker';
+const idPathParam = '/:id';
 
 export const reportsPageName = 'Reports';
 export const reportsPagePath = '/reports';
@@ -46,11 +47,21 @@ class App extends Component {
                     <Route exact path={'/'} component={Reports}/>
                     <Route exact path={contextPath} component={Reports}/>
                     <Route path={reportsPagePath} component={Reports}/>
-                    <Route path={transactionsPagePath} component={TransactionsPage}/>
-                    <Route path={itemsPagePath} component={ItemsPage}/>
-                    <Route path={categoriesPagePath} component={CategoriesPage}/>
-                    <Route path={merchantsPagePath} component={MerchantsPage}/>
-                    <Route path={measuresPagePath} component={MeasuresPage}/>
+
+                    <Route exact path={transactionsPagePath} component={TransactionsPage}/>
+                    <Route exact path={transactionsPagePath + idPathParam} component={TransactionsPage}/>
+
+                    <Route exact path={itemsPagePath} component={ItemsPage}/>
+                    <Route exact path={itemsPagePath + idPathParam} component={ItemsPage}/>
+
+                    <Route exact path={categoriesPagePath} component={CategoriesPage}/>
+                    <Route exact path={categoriesPagePath + idPathParam} component={CategoriesPage}/>
+
+                    <Route exact path={merchantsPagePath} component={MerchantsPage}/>
+                    <Route exact path={merchantsPagePath + idPathParam} component={MerchantsPage}/>
+
+                    <Route exact path={measuresPagePath} component={MeasuresPage}/>
+                    <Route exact path={measuresPagePath + idPathParam} component={MeasuresPage}/>
                 </Switch>
             </BrowserRouter>
         );

@@ -24,7 +24,7 @@ const itemsEditPanel = (props) => {
                         <Render if={props.isEditFormDisabled && !props.isItemTransient}>
                             <button type="button"
                                     className="btn btn-outline-secondary"
-                                    onClick={props.editAction}>
+                                    onClick={() => props.editAction(props.itemId)}>
                                 <i className="fa fa-pencil pr-2 pl-2"
                                    aria-hidden="true"/>
                             </button>
@@ -32,7 +32,7 @@ const itemsEditPanel = (props) => {
                         <Render if={!props.isItemTransient}>
                             <button type="button"
                                     className="btn btn-outline-secondary"
-                                    onClick={props.cloneAction}>
+                                    onClick={() => props.cloneAction(props.itemId)}>
                                 <i className="fa fa-clone pr-2 pl-2"
                                    aria-hidden="true"/>
                             </button>
@@ -54,7 +54,7 @@ const itemsEditPanel = (props) => {
                         <Render if={!props.isItemTransient}>
                             <button type="button"
                                     className="btn btn-outline-secondary"
-                                    onClick={props.deleteAction}>
+                                    onClick={() => props.deleteAction(props.itemId)}>
                                 <i className="fa fa-trash pr-2 pl-2"
                                    aria-hidden="true"/>
                             </button>
@@ -126,7 +126,7 @@ const itemsEditPanel = (props) => {
                         <Render if={props.isEditFormDisabled && !props.isItemTransient}>
                             <button type="button"
                                     className="btn btn-secondary btn-block"
-                                    onClick={props.editAction}>
+                                    onClick={() => props.editAction(props.itemId)}>
                                 <i className="fa fa-pencil pr-1 pl-1"
                                    aria-hidden="true"/>
                             </button>
@@ -134,7 +134,7 @@ const itemsEditPanel = (props) => {
                         <Render if={!props.isItemTransient}>
                             <button type="button"
                                     className="btn btn-secondary btn-block"
-                                    onClick={props.cloneAction}>
+                                    onClick={() => props.cloneAction(props.itemId)}>
                                 <i className="fa fa-clone pr-1 pl-1"
                                    aria-hidden="true"/>
                             </button>
@@ -156,7 +156,7 @@ const itemsEditPanel = (props) => {
                         <Render if={!props.isItemTransient}>
                             <button type="button"
                                     className="btn btn-secondary btn-block"
-                                    onClick={props.deleteAction}>
+                                    onClick={() => props.deleteAction(props.itemId)}>
                                 <i className="fa fa-trash pr-1 pl-1"
                                    aria-hidden="true"/>
                             </button>

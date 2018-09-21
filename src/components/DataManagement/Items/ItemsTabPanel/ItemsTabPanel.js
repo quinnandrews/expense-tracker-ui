@@ -2,12 +2,14 @@ import React, {Component} from 'react';
 import ItemsHelpPanel from "../ItemsHelpPanel/ItemsHelpPanel";
 import ItemsListPanel from "../ItemsListPanel/ItemsListPanel";
 import ItemsEditPanel from "../ItemsEditPanel/ItemsEditPanel";
+import PropTypes from "prop-types";
 
 const listTab = 'listTab';
 const editTab = 'editTab';
 const helpTab = 'helpTab';
 
-const defaultEditStateMessage = 'Creating New Item';
+const editTabCreateLabel = 'CREATE';
+const editTabEditLabel = 'EDIT';
 
 class ItemsTabPanel extends Component {
 
@@ -15,9 +17,10 @@ class ItemsTabPanel extends Component {
         super(props);
         this.state = {
             itemIdSequence: 3,
-            selectedTab: listTab,
+            selectedTab: null,
+            editTabLabel: null,
             listStateMessage: null,
-            editStateMessage: defaultEditStateMessage,
+            editStateMessage: null,
             editFormIsDisabled: false,
             itemId: 0,
             itemName: '',
@@ -64,7 +67,15 @@ class ItemsTabPanel extends Component {
     /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PROPERTIES */
 
     isTabSelected(tab) {
-        return this.state.selectedTab === tab;
+        return this.getSelectedTab() === tab;
+    }
+
+    getSelectedTab() {
+        let tab = this.state.selectedTab;
+        if (tab === null) {
+            tab = listTab;
+        }
+        return tab;
     }
 
     setSelectedTab(tab) {
@@ -79,6 +90,18 @@ class ItemsTabPanel extends Component {
         return this.isTabSelected(tab) ? 'tab-pane fade show active' : 'tab-pane fade';
     }
 
+    getEditTabLabel() {
+        let label = this.state.editTabLabel;
+        if (label === null) {
+            label = editTabEditLabel;
+        }
+        return label;
+    }
+
+    setEditTabLabel(label) {
+        this.setState({editTabLabel: label});
+    }
+
     isEditFormDisabled() {
         return this.state.editFormIsDisabled;
     }
@@ -90,7 +113,7 @@ class ItemsTabPanel extends Component {
     getListStateMessage() {
         let message = this.state.listStateMessage;
         if (message === null) {
-            message = 'Found ' + this.state.itemList.length + ' Items';
+            message = 'Found ' + this.getItemList().length + ' Items';
         }
         return message;
     }
@@ -156,7 +179,7 @@ class ItemsTabPanel extends Component {
     save = () => {
         console.log("save");
         let item = null;
-        if (this.state.itemId !== 0) {
+        if (!this.isItemTransient()) {
             // persistent object - update
             item = this.getItemList().find(i => i.id == this.state.itemId);
             item.id = this.getItemId();
@@ -171,7 +194,7 @@ class ItemsTabPanel extends Component {
                     id: null,
                     name: null
                 }
-            }
+            };
             const newItemId = ++this.state.itemIdSequence;
             this.setItemId(newItemId);
             item.id = newItemId;
@@ -182,28 +205,39 @@ class ItemsTabPanel extends Component {
         console.log(item);
         this.setEditStateMessage('Saved Item #' + item.id);
         this.setIsEditFormDisabled(true);
+        this.setEditTabLabel(editTabEditLabel);
     };
 
-    edit = () => {
+    edit = (id) => {
         console.log("edit");
-        if (!this.isItemTransient()) {
-            const item = this.getItemList().find(i => i.id == this.getItemId());
+        const item = this.getItemList().find(i => i.id == id);
+        if (item !== undefined) {
             this.setItemId(item.id);
             this.setItemName(item.name);
             this.setItemCategoryId(item.category.id);
             this.setEditStateMessage('Editing Item #' + item.id);
             this.setIsEditFormDisabled(false);
+            this.setEditTabLabel(editTabEditLabel);
+            this.setSelectedTab(editTab);
+        } else {
+            // TODO - Report Not Found Error
         }
     };
 
-    clone = () => {
+    clone = (id) => {
         console.log("clone");
-        if (!this.isItemTransient()) {
-            const cloneName = 'COPY OF ' + this.getItemName();
+        const item = this.getItemList().find(i => i.id == id);
+        if (item !== undefined) {
+            const cloneName = 'COPY OF ' + item.name;
             this.setItemId(0);
             this.setItemName(cloneName);
+            this.setItemCategoryId(item.category.id);
             this.setEditStateMessage('Creating New Item From Clone');
             this.setIsEditFormDisabled(false);
+            this.setEditTabLabel(editTabCreateLabel);
+            this.setSelectedTab(editTab);
+        } else {
+            // TODO - Report Not Found Error
         }
     };
 
@@ -214,13 +248,13 @@ class ItemsTabPanel extends Component {
         this.setItemCategoryId(0);
         this.setEditStateMessage('Creating New Item');
         this.setIsEditFormDisabled(false);
+        this.setEditTabLabel(editTabCreateLabel);
     };
 
     revert = () => {
         console.log("revert");
-        // if persistent ? revert to saved state : call create
         if (!this.isItemTransient()) {
-            this.edit();
+            this.edit(this.getItemId());
             this.setEditStateMessage('Reverted to Saved Version of Item #' + this.getItemId());
         } else {
             this.create();
@@ -228,59 +262,48 @@ class ItemsTabPanel extends Component {
         }
     };
 
-    delete = () => {
+    delete = (id) => {
         console.log("delete");
         // TODO: check if any associated Transactions exist
-        if (!this.isItemTransient()) {
-            const items = [...this.getItemList()];
-            const item = items.find(i => i.id == this.getItemId());
+        const items = [...this.getItemList()];
+        const item = items.find(i => i.id == id);
+        if (item !== undefined) {
+            // remove the item from the list
             const index = items.indexOf(item);
             const deletedItem = items.splice(index, 1);
             this.setItemList(items);
-            this.create();
-            this.setEditStateMessage('Deleted Item #' + deletedItem[0].id);
-            this.setIsEditFormDisabled(true);
+            if (item.id === this.getItemId()) {
+                // the item is loaded in the editor
+                // reset itemId to mark as transient, but leave other values for user reference
+                this.setItemId(0);
+                this.setEditStateMessage('Deleted Item #' + deletedItem[0].id);
+                this.setIsEditFormDisabled(true);
+            }
+        } else {
+            // TODO - Report Not Found Error
         }
-    };
-
-    editFromList = (item) => {
-        console.log("editFromList");
-        this.setItemId(item.id);
-        this.setItemName(item.name);
-        this.setItemCategoryId(item.category.id);
-        this.setEditStateMessage('Editing Item #' + item.id);
-        this.setSelectedTab(editTab);
-        this.setIsEditFormDisabled(false);
-    };
-
-    cloneFromList = (item) => {
-        console.log("cloneFromList");
-        this.setItemId(0);
-        this.setItemName('COPY OF ' + item.name);
-        this.setItemCategoryId(item.category.id);
-        this.setEditStateMessage('Creating New Item From Clone');
-        this.setSelectedTab(editTab);
-        this.setIsEditFormDisabled(false);
-    };
-
-    deleteFromList = (index) => {
-        console.log("deleteFromList");
-        // TODO: check if any associated Transactions exist
-        const items = [...this.getItemList()];
-        const deletedItem = items.splice(index, 1);
-        this.setItemList(items);
-        this.setListStateMessage('Deleted Item #' + deletedItem[0].id);
     };
 
     /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> VALUE CHANGE HANDLERS */
 
-    itemNameChanged(event) {
+    itemNameChanged = (event) => {
         this.setItemName(event.target.value);
     };
 
-    itemCategoryChanged(event) {
+    itemCategoryChanged = (event) => {
         this.setItemCategoryId(event.target.value);
     };
+
+    /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> LIFECYCLE METHODS */
+
+    componentWillMount() {
+        const idParam = this.props.idParam;
+        if (idParam !== undefined) {
+            this.edit(Number.parseInt(idParam));
+        } else {
+            this.create();
+        }
+    }
 
     /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> RENDER METHOD */
 
@@ -294,7 +317,7 @@ class ItemsTabPanel extends Component {
                         <a className={this.getSelectedTabClassName(listTab)}
                            id="list-tab"
                            data-toggle="tab"
-                           href="#list"
+                           href="#"
                            role="tab"
                            aria-controls="list"
                            aria-selected="true"
@@ -304,17 +327,17 @@ class ItemsTabPanel extends Component {
                         <a className={this.getSelectedTabClassName(editTab)}
                            id="editor-tab"
                            data-toggle="tab"
-                           href="#editor"
+                           href="#"
                            role="tab"
                            aria-controls="editor"
                            aria-selected="false"
-                           onClick={() => this.setSelectedTab(editTab)}>EDIT</a>
+                           onClick={() => this.setSelectedTab(editTab)}>{this.getEditTabLabel()}</a>
                     </li>
                     <li className="nav-item">
                         <a className={this.getSelectedTabClassName(helpTab)}
                            id="guide-tab"
                            data-toggle="tab"
-                           href="#guide"
+                           href="#"
                            role="tab"
                            aria-controls="guide"
                            aria-selected="false"
@@ -329,9 +352,9 @@ class ItemsTabPanel extends Component {
                          aria-labelledby="list-tab">
                         <ItemsListPanel listStateMessage={this.getListStateMessage()}
                                         itemList={this.getItemList()}
-                                        editAction={this.editFromList}
-                                        cloneAction={this.cloneFromList}
-                                        deleteAction={this.deleteFromList}/>
+                                        editAction={this.edit}
+                                        cloneAction={this.clone}
+                                        deleteAction={this.delete}/>
                     </div>
                     <div className={this.getSelectedTabPaneClassName(editTab)}
                          id="editor"
@@ -365,5 +388,9 @@ class ItemsTabPanel extends Component {
     }
 
 }
+
+ItemsTabPanel.propTypes = {
+    idParam: PropTypes.string
+};
 
 export default ItemsTabPanel;

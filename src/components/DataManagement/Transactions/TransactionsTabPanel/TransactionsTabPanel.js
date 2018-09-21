@@ -2,12 +2,15 @@ import React, {Component} from 'react';
 import TransactionsHelpPanel from "../TransactionsHelpPanel/TransactionsHelpPanel";
 import TransactionsEditPanel from "../TransactionsEditPanel/TransactionsEditPanel";
 import TransactionsListPanel from "../TransactionsListPanel/TransactionsListPanel";
+import PropTypes from "prop-types";
+import ItemsTabPanel from "../../Items/ItemsTabPanel/ItemsTabPanel";
 
 const listTab = 'listTab';
 const editTab = 'editTab';
 const helpTab = 'helpTab';
 
-const defaultEditStateMessage = 'Creating New Transaction';
+const editTabCreateLabel = 'CREATE';
+const editTabEditLabel = 'EDIT';
 
 class TransactionsTabPanel extends Component {
 
@@ -16,8 +19,9 @@ class TransactionsTabPanel extends Component {
         this.state = {
             transactionIdSequence: 3,
             selectedTab: listTab,
+            editTabLabel: null,
             listStateMessage: null,
-            editStateMessage: defaultEditStateMessage,
+            editStateMessage: null,
             editFormIsDisabled: false,
             transactionId: 0,
             transactionDate: Date.now(),
@@ -81,6 +85,18 @@ class TransactionsTabPanel extends Component {
 
     getSelectedTabPaneClassName(tab) {
         return this.isTabSelected(tab) ? 'tab-pane fade show active' : 'tab-pane fade';
+    }
+
+    getEditTabLabel() {
+        let label = this.state.editTabLabel;
+        if (label === null) {
+            label = editTabEditLabel;
+        }
+        return label;
+    }
+
+    setEditTabLabel(label) {
+        this.setState({editTabLabel: label});
     }
 
     isEditFormDisabled() {
@@ -160,7 +176,7 @@ class TransactionsTabPanel extends Component {
     save = () => {
         console.log("save");
         let transaction = null;
-        if (this.state.transactionId !== 0) {
+        if (this.isTransactionTransient()) {
             // persistent object - update
             transaction = this.getTransactionList().find(t => t.id == this.state.transactionId);
             transaction.id = this.getTransactionId();
@@ -186,27 +202,39 @@ class TransactionsTabPanel extends Component {
         console.log(transaction);
         this.setEditStateMessage('Saved Transaction #' + transaction.id);
         this.setIsEditFormDisabled(true);
+        this.setEditTabLabel(editTabEditLabel);
     };
 
-    edit = () => {
+    edit = (id) => {
         console.log("edit");
-        if (!this.isTransactionTransient()) {
-            const transaction = this.getTransactionList().find(t => t.id == this.getTransactionId());
+        const transaction = this.getTransactionList().find(t => t.id == id);
+        if (transaction !== undefined) {
             this.setTransactionId(transaction.id);
             this.setTransactionDate(transaction.date);
             this.setTransactionMerchantId(transaction.merchant.id);
             this.setEditStateMessage('Editing Transaction #' + transaction.id);
             this.setIsEditFormDisabled(false);
+            this.setEditTabLabel(editTabEditLabel);
+            this.setSelectedTab(editTab);
+        } else {
+            // TODO - Report Not Found Error
         }
+
     };
 
-    clone = () => {
+    clone = (id) => {
         console.log("clone");
-        if (!this.isTransactionTransient()) {
+        const transaction = this.getTransactionList().find(t => t.id == id);
+        if (transaction !== undefined) {
             this.setTransactionId(0);
             this.setTransactionDate(Date.now());
+            this.setTransactionMerchantId(transaction.merchant.id);
             this.setEditStateMessage('Creating New Transaction From Clone');
             this.setIsEditFormDisabled(false);
+            this.setEditTabLabel(editTabCreateLabel);
+            this.setSelectedTab(editTab);
+        } else {
+            // TODO - Report Not Found Error
         }
     };
 
@@ -217,13 +245,14 @@ class TransactionsTabPanel extends Component {
         this.setTransactionMerchantId(0);
         this.setEditStateMessage('Creating New Transaction');
         this.setIsEditFormDisabled(false);
+        this.setEditTabLabel(editTabCreateLabel);
     };
 
     revert = () => {
         console.log("revert");
         // if persistent ? revert to saved state : call create
         if (!this.isTransactionTransient()) {
-            this.edit();
+            this.edit(this.getTransactionId());
             this.setEditStateMessage('Reverted to Saved Version of Transaction #' + this.getTransactionId());
         } else {
             this.create();
@@ -231,48 +260,26 @@ class TransactionsTabPanel extends Component {
         }
     };
 
-    delete = () => {
+    delete = (id) => {
         console.log("delete");
         // TODO: check if any associated Transactions exist
-        if (!this.isTransactionTransient()) {
-            const transactions = [...this.getTransactionList()];
-            const transaction = transactions.find(t => t.id == this.getTransactionId());
+        const transactions = [...this.getTransactionList()];
+        const transaction = transactions.find(t => t.id == id);
+        if (transaction !== undefined) {
+            // remove the transaction from the list
             const index = transactions.indexOf(transaction);
             const deletedTransaction = transactions.splice(index, 1);
             this.setTransactionList(transactions);
-            this.create();
-            this.setEditStateMessage('Deleted Transaction #' + deletedTransaction[0].id);
-            this.setIsEditFormDisabled(true);
+            if (transaction.id === this.getTransactionId()) {
+                // the transaction is loaded in the editor
+                // reset transactionId to mark as transient, but leave other values for user reference
+                this.setTransactionId(0);
+                this.setEditStateMessage('Deleted Transaction #' + deletedTransaction[0].id);
+                this.setIsEditFormDisabled(true);
+            }
+        } else {
+            // TODO - Report Not Found Error
         }
-    };
-
-    editFromList = (transaction) => {
-        console.log("editFromList");
-        this.setTransactionId(transaction.id);
-        this.setTransactionDate(transaction.date);
-        this.setTransactionMerchantId(transaction.merchant.id);
-        this.setEditStateMessage('Editing Transaction #' + transaction.id);
-        this.setSelectedTab(editTab);
-        this.setIsEditFormDisabled(false);
-    };
-
-    cloneFromList = (transaction) => {
-        console.log("cloneFromList");
-        this.setTransactionId(0);
-        this.setTransactionDate(Date.now());
-        this.setTransactionMerchantId(transaction.merchant.id);
-        this.setEditStateMessage('Creating New Transaction From Clone');
-        this.setSelectedTab(editTab);
-        this.setIsEditFormDisabled(false);
-    };
-
-    deleteFromList = (index) => {
-        console.log("deleteFromList");
-        // TODO: check if any associated Transactions exist
-        const transactions = [...this.getTransactionList()];
-        const deletedTransaction = transactions.splice(index, 1);
-        this.setTransactionList(transactions);
-        this.setListStateMessage('Deleted Transaction #' + deletedTransaction[0].id);
     };
 
     /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> VALUE CHANGE HANDLERS */
@@ -284,6 +291,17 @@ class TransactionsTabPanel extends Component {
     transactionMerchantChanged(event) {
         this.setTransactionMerchantId(event.target.value);
     };
+
+    /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> LIFECYCLE METHODS */
+
+    componentWillMount() {
+        const idParam = this.props.idParam;
+        if (idParam !== undefined) {
+            this.edit(Number.parseInt(idParam));
+        } else {
+            this.create();
+        }
+    }
 
     /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> RENDER METHOD */
 
@@ -332,9 +350,9 @@ class TransactionsTabPanel extends Component {
                          aria-labelledby="list-tab">
                         <TransactionsListPanel listStateMessage={this.getListStateMessage()}
                                                transactionList={this.getTransactionList()}
-                                               editAction={this.editFromList}
-                                               cloneAction={this.cloneFromList}
-                                               deleteAction={this.deleteFromList}/>
+                                               editAction={this.edit}
+                                               cloneAction={this.clone}
+                                               deleteAction={this.delete}/>
                     </div>
                     <div className={this.getSelectedTabPaneClassName(editTab)}
                          id="editor"
@@ -368,5 +386,9 @@ class TransactionsTabPanel extends Component {
     }
 
 }
+
+TransactionsTabPanel.propTypes = {
+    idParam: PropTypes.string
+};
 
 export default TransactionsTabPanel;
