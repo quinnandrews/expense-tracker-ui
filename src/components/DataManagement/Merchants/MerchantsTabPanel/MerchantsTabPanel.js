@@ -2,12 +2,14 @@ import React, {Component} from 'react';
 import MerchantsHelpPanel from "../MerchantsHelpPanel/MerchantsHelpPanel";
 import MerchantsEditPanel from "../MerchantsEditPanel/MerchantsEditPanel";
 import MerchantsListPanel from "../MerchantsListPanel/MerchantsListPanel";
+import PropTypes from "prop-types";
 
 const listTab = 'listTab';
 const editTab = 'editTab';
 const helpTab = 'helpTab';
 
-const defaultEditStateMessage = 'Creating New Merchant';
+const editTabCreateLabel = 'CREATE';
+const editTabEditLabel = 'EDIT';
 
 class MerchantsTabPanel extends Component {
 
@@ -15,9 +17,10 @@ class MerchantsTabPanel extends Component {
         super(props);
         this.state = {
             idSequence: 3,
-            selectedTab: listTab,
+            selectedTab: null,
+            editTabLabel: null,
             listStateMessage: null,
-            editStateMessage: defaultEditStateMessage,
+            editStateMessage: null,
             editFormIsDisabled: false,
             merchantId: 0,
             merchantName: '',
@@ -41,7 +44,15 @@ class MerchantsTabPanel extends Component {
     /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PROPERTIES */
 
     isTabSelected(tab) {
-        return this.state.selectedTab === tab;
+        return this.getSelectedTab() === tab;
+    }
+
+    getSelectedTab() {
+        let tab = this.state.selectedTab;
+        if (tab === null) {
+            tab = listTab;
+        }
+        return tab;
     }
 
     setSelectedTab(tab) {
@@ -54,6 +65,18 @@ class MerchantsTabPanel extends Component {
 
     getSelectedTabPaneClassName(tab) {
         return this.isTabSelected(tab) ? 'tab-pane fade show active' : 'tab-pane fade';
+    }
+
+    getEditTabLabel() {
+        let label = this.state.editTabLabel;
+        if (label === null) {
+            label = editTabEditLabel;
+        }
+        return label;
+    }
+
+    setEditTabLabel(label) {
+        this.setState({editTabLabel: label});
     }
 
     isEditFormDisabled() {
@@ -117,9 +140,9 @@ class MerchantsTabPanel extends Component {
     save = () => {
         console.log("save");
         let merchant = null;
-        if (this.state.merchantId !== 0) {
+        if (!this.isMerchantTransient()) {
             // persistent object - update
-            merchant = this.getMerchantList().find(c => c.id == this.state.merchantId);
+            merchant = this.getMerchantList().find(c => c.id == this.getMerchantId());
             merchant.id = this.getMerchantId();
             merchant.name = this.getMerchantName();
         } else {
@@ -127,37 +150,47 @@ class MerchantsTabPanel extends Component {
             merchant = {
                 id: null,
                 name: null
-            }
-            const newItemId = ++this.state.idSequence;
-            this.setMerchantId(newItemId);
-            merchant.id = newItemId;
+            };
+            const newMerchantId = ++this.state.idSequence;
+            this.setMerchantId(newMerchantId);
+            merchant.id = newMerchantId;
             merchant.name = this.getMerchantName();
             this.getMerchantList().push(merchant);
         }
         console.log(merchant);
         this.setEditStateMessage('Saved Merchant #' + merchant.id);
         this.setIsEditFormDisabled(true);
+        this.setEditTabLabel(editTabEditLabel);
     };
 
-    edit = () => {
+    edit = (id) => {
         console.log("edit");
-        if (!this.isMerchantTransient()) {
-            const merchant = this.getMerchantList().find(c => c.id == this.getMerchantId());
+        const merchant = this.getMerchantList().find(c => c.id == id);
+        if (merchant !== undefined) {
             this.setMerchantId(merchant.id);
             this.setMerchantName(merchant.name);
             this.setEditStateMessage('Editing Merchant #' + merchant.id);
             this.setIsEditFormDisabled(false);
+            this.setEditTabLabel(editTabEditLabel);
+            this.setSelectedTab(editTab);
+        } else {
+            // TODO - Report Not Found Error
         }
     };
 
-    clone = () => {
+    clone = (id) => {
         console.log("clone");
-        if (!this.isMerchantTransient()) {
-            const cloneName = 'COPY OF ' + this.getMerchantName();
+        const merchant = this.getMerchantList().find(c => c.id == id);
+        if (merchant !== undefined) {
+            const cloneName = 'COPY OF ' + merchant.name;
             this.setMerchantId(0);
             this.setMerchantName(cloneName);
             this.setEditStateMessage('Creating New Merchant From Clone');
             this.setIsEditFormDisabled(false);
+            this.setEditTabLabel(editTabCreateLabel);
+            this.setSelectedTab(editTab);
+        } else {
+            // TODO - Report Not Found Error
         }
     };
 
@@ -167,13 +200,14 @@ class MerchantsTabPanel extends Component {
         this.setMerchantName('');
         this.setEditStateMessage('Creating New Merchant');
         this.setIsEditFormDisabled(false);
+        this.setEditTabLabel(editTabCreateLabel);
     };
 
     revert = () => {
         console.log("revert");
         // if persistent ? revert to saved state : call create
         if (!this.isMerchantTransient()) {
-            this.edit();
+            this.edit(this.getMerchantId());
             this.setEditStateMessage('Reverted to Saved Version of Merchant #' + this.getMerchantId());
         } else {
             this.create();
@@ -181,46 +215,25 @@ class MerchantsTabPanel extends Component {
         }
     };
 
-    delete = () => {
+    delete = (id) => {
         console.log("delete");
         // TODO: check if any associated Transactions exist
-        if (!this.isMerchantTransient()) {
-            const categories = [...this.getMerchantList()];
-            const merchant = categories.find(c => c.id == this.getMerchantId());
-            const index = categories.indexOf(merchant);
-            const deletedMerchant = categories.splice(index, 1);
-            this.setMerchantList(categories);
-            this.create();
-            this.setEditStateMessage('Deleted Merchant #' + deletedMerchant[0].id);
-            this.setIsEditFormDisabled(true);
+        const merchants = [...this.getMerchantList()];
+        const merchant = merchants.find(c => c.id == id);
+        if (merchant !== undefined) {
+            // remove the item from the list
+            const index = merchants.indexOf(merchant);
+            const deletedMerchant = merchants.splice(index, 1);
+            this.setMerchantList(merchants);
+            this.setListStateMessage('Deleted Merchant #' + deletedMerchant[0].id);
+            if (merchant.id === this.getMerchantId()) {
+                // the merchant is loaded in the editor
+                // reset merchantId to mark as transient, but leave other values for user reference
+                this.setMerchantId(0);
+                this.setEditStateMessage('Deleted Merchant #' + deletedMerchant[0].id);
+                this.setIsEditFormDisabled(true);
+            }
         }
-    };
-
-    editFromList = (merchant) => {
-        console.log("editFromList");
-        this.setMerchantId(merchant.id);
-        this.setMerchantName(merchant.name);
-        this.setEditStateMessage('Editing Merchant #' + merchant.id);
-        this.setSelectedTab(editTab);
-        this.setIsEditFormDisabled(false);
-    };
-
-    cloneFromList = (merchant) => {
-        console.log("cloneFromList");
-        this.setMerchantId(0);
-        this.setMerchantName('COPY OF ' + merchant.name);
-        this.setEditStateMessage('Creating New Merchant From Clone');
-        this.setSelectedTab(editTab);
-        this.setIsEditFormDisabled(false);
-    };
-
-    deleteFromList = (index) => {
-        console.log("deleteFromList");
-        // TODO: check if any associated Transactions exist
-        const categories = [...this.getMerchantList()];
-        const deletedMerchant = categories.splice(index, 1);
-        this.setMerchantList(categories);
-        this.setListStateMessage('Deleted Merchant #' + deletedMerchant[0].id);
     };
 
     /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> VALUE CHANGE HANDLERS */
@@ -228,6 +241,17 @@ class MerchantsTabPanel extends Component {
     merchantNameChanged(event) {
         this.setMerchantName(event.target.value);
     };
+
+    /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> LIFECYCLE METHODS */
+
+    componentWillMount() {
+        const idParam = this.props.idParam;
+        if (idParam !== undefined) {
+            this.edit(Number.parseInt(idParam));
+        } else {
+            this.create();
+        }
+    }
 
     /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> RENDER METHOD */
 
@@ -255,7 +279,7 @@ class MerchantsTabPanel extends Component {
                            role="tab"
                            aria-controls="editor"
                            aria-selected="false"
-                           onClick={() => this.setSelectedTab(editTab)}>EDIT</a>
+                           onClick={() => this.setSelectedTab(editTab)}>{this.getEditTabLabel()}</a>
                     </li>
                     <li className="nav-item">
                         <a className={this.getSelectedTabClassName(helpTab)}
@@ -276,9 +300,9 @@ class MerchantsTabPanel extends Component {
                          aria-labelledby="list-tab">
                         <MerchantsListPanel listStateMessage={this.getListStateMessage()}
                                             merchantList={this.getMerchantList()}
-                                            editAction={this.editFromList}
-                                            cloneAction={this.cloneFromList}
-                                            deleteAction={this.deleteFromList}/>
+                                            editAction={this.edit}
+                                            cloneAction={this.clone}
+                                            deleteAction={this.delete}/>
                     </div>
                     <div className={this.getSelectedTabPaneClassName(editTab)}
                          id="editor"
@@ -309,5 +333,9 @@ class MerchantsTabPanel extends Component {
     }
 
 }
+
+MerchantsTabPanel.propTypes = {
+    idParam: PropTypes.string
+};
 
 export default MerchantsTabPanel;

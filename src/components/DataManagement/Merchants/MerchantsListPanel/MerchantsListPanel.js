@@ -28,34 +28,34 @@ const merchantsListPanel = (props) => {
                                     <div className="d-block d-md-none">
                                         <button type="button"
                                                 className="btn btn-secondary btn-block mr-3"
-                                                onClick={() => props.editAction(merchant)}>
+                                                onClick={() => props.editAction(merchant.id)}>
                                             <i className="fa fa-pencil"/>
                                         </button>
                                         <button type="button"
                                                 className="btn btn-secondary btn-block mr-3"
-                                                onClick={() => props.cloneAction(merchant)}>
+                                                onClick={() => props.cloneAction(merchant.id)}>
                                             <i className="fa fa-clone"/>
                                         </button>
                                         <button type="button"
                                                 className="btn btn-secondary btn-block"
-                                                onClick={() => props.deleteAction(index)}>
+                                                onClick={() => props.deleteAction(merchant.id)}>
                                             <i className="fa fa-trash"/>
                                         </button>
                                     </div>
                                     <div className="d-none d-md-block btn-group" role="group">
                                         <button type="button"
                                                 className="btn btn-outline-secondary"
-                                                onClick={() => props.editAction(merchant)}>
+                                                onClick={() => props.editAction(merchant.id)}>
                                             <i className="fa fa-pencil pr-2 pl-2"/>
                                         </button>
                                         <button type="button"
                                                 className="btn btn-outline-secondary"
-                                                onClick={() => props.cloneAction(merchant)}>
+                                                onClick={() => props.cloneAction(merchant.id)}>
                                             <i className="fa fa-clone pr-2 pl-2"/>
                                         </button>
                                         <button type="button"
                                                 className="btn btn-outline-secondary"
-                                                onClick={() => props.deleteAction(index)}>
+                                                onClick={() => props.deleteAction(merchant.id)}>
                                             <i className="fa fa-trash pr-2 pl-2"/>
                                         </button>
                                     </div>

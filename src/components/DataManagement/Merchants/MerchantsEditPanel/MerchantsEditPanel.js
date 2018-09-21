@@ -24,7 +24,7 @@ const merchantsEditPanel = (props) => {
                         <Render if={props.isEditFormDisabled && !props.isMerchantTransient}>
                             <button type="button"
                                     className="btn btn-outline-secondary"
-                                    onClick={props.editAction}>
+                                    onClick={() => props.editAction(props.merchantId)}>
                                 <i className="fa fa-pencil pr-2 pl-2"
                                    aria-hidden="true"/>
                             </button>
@@ -32,7 +32,7 @@ const merchantsEditPanel = (props) => {
                         <Render if={!props.isMerchantTransient}>
                             <button type="button"
                                     className="btn btn-outline-secondary"
-                                    onClick={props.cloneAction}>
+                                    onClick={() => props.cloneAction(props.merchantId)}>
                                 <i className="fa fa-clone pr-2 pl-2"
                                    aria-hidden="true"/>
                             </button>
@@ -54,7 +54,7 @@ const merchantsEditPanel = (props) => {
                         <Render if={!props.isMerchantTransient}>
                             <button type="button"
                                     className="btn btn-outline-secondary"
-                                    onClick={props.deleteAction}>
+                                    onClick={() => props.deleteAction(props.merchantId)}>
                                 <i className="fa fa-trash pr-2 pl-2"
                                    aria-hidden="true"/>
                             </button>
@@ -74,7 +74,7 @@ const merchantsEditPanel = (props) => {
                                                className="form-control"
                                                id="itemName"
                                                required={true}
-                                               maxLength={128}
+                                               maxLength={32}
                                                disabled={props.isEditFormDisabled}
                                                onChange={props.merchantNameChangeHandler}
                                                value={props.merchantName}/>
@@ -98,7 +98,7 @@ const merchantsEditPanel = (props) => {
                         <Render if={props.isEditFormDisabled && !props.isMerchantTransient}>
                             <button type="button"
                                     className="btn btn-secondary btn-block"
-                                    onClick={props.editAction}>
+                                    onClick={() => props.editAction(props.merchantId)}>
                                 <i className="fa fa-pencil pr-1 pl-1"
                                    aria-hidden="true"/>
                             </button>
@@ -106,7 +106,7 @@ const merchantsEditPanel = (props) => {
                         <Render if={!props.isMerchantTransient}>
                             <button type="button"
                                     className="btn btn-secondary btn-block"
-                                    onClick={props.cloneAction}>
+                                    onClick={() => props.cloneAction(props.merchantId)}>
                                 <i className="fa fa-clone pr-1 pl-1"
                                    aria-hidden="true"/>
                             </button>
@@ -128,7 +128,7 @@ const merchantsEditPanel = (props) => {
                         <Render if={!props.isMerchantTransient}>
                             <button type="button"
                                     className="btn btn-secondary btn-block"
-                                    onClick={props.deleteAction}>
+                                    onClick={() => props.deleteAction(props.merchantId)}>
                                 <i className="fa fa-trash pr-1 pl-1"
                                    aria-hidden="true"/>
                             </button>
