@@ -16,17 +16,13 @@ const itemsHelpPanel = () => {
                         for example (e.g. 'Bitburger Beer' or 'Stiegel 0.5L 4-Pack').
                     </p>
                     <p>
-                        Each Item must be assigned to a Category, which allows for Reports that analyze
-                        data by groups of Items. If a relevant Category does not exist when creating an
+                        Each Item must be assigned to a Category. If a relevant Category does not exist when creating an
                         Item, a new Category can be created by clicking
-                        the <i className="fa fa-plus pr-1 pl-1" aria-hidden="true"/> icon appended to
-                        the Category Select Dropdown.
+                        the <i className="fa fa-plus pr-1 pl-1" aria-hidden="true"/> icon appended to the Category Select
+                        Dropdown.
                     </p>
                     <p>
-                        Each Item Name must be nor more than 128 characters long and must be unique.
-                    </p>
-                    <p>
-                        An Item can only be deleted if it has no associated Transactions.
+                        An Item can only be deleted if it has no associated Transaction Items.
                     </p>
                 </div>
                 <div className="col-md-6">

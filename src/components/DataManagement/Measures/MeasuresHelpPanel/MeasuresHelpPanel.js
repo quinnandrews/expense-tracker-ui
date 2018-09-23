@@ -7,31 +7,20 @@ const measuresHelpPanel = () => {
             <div className="row">
                 <div className="col-md-6">
                     <p className="font-weight-bold">
-                        About Items
+                        About Measures
                     </p>
                     <p>
-                        Items are the things purchased from a Merchant when a Transaction is made. The
-                        manner in which Items are distinguished is at the User's discretion. They can be
-                        named generically (e.g. 'Beer') or by one or more variations, like brand or volume,
-                        for example (e.g. 'Bitburger Beer' or 'Stiegel 0.5L 4-Pack').
+                        Measures are the manner in which things are purchased from a Merchant when a Transaction is
+                        made. Were the Items purchased as discrete packaged units, where each unit has a price, or was
+                        it purchased in bulk by weight, where the price is determined by the number of pounds or ounces.
                     </p>
                     <p>
-                        Each Item must be assigned to a Category, which allows for Reports that analyze
-                        data by groups of Items. If a relevant Category does not exist when creating an
-                        Item, a new Category can be created by clicking
-                        the <i className="fa fa-plus pr-1 pl-1" aria-hidden="true"/> icon appended to
-                        the Category Select Dropdown.
-                    </p>
-                    <p>
-                        Each Item Name must be nor more than 128 characters long and must be unique.
-                    </p>
-                    <p>
-                        An Item can only be deleted if it has no associated Transactions.
+                        A Measure can only be deleted if it has no associated Transaction Items.
                     </p>
                 </div>
                 <div className="col-md-6">
                     <p className="font-weight-bold">
-                        Item Properties
+                        Measure Properties
                     </p>
                     <table className="table table-striped table-hover">
                         <thead>
@@ -44,23 +33,25 @@ const measuresHelpPanel = () => {
                         <tbody>
                         <tr>
                             <td>ID</td>
-                            <td>Item identifier in the Expense Tracker Database. Number.</td>
+                            <td>Measure identifier in the Expense Tracker Database. Number.</td>
                             <td>(generated)</td>
                         </tr>
                         <tr>
                             <td>Name</td>
                             <td>
-                                The name of the Item that was purchased in a Transaction. May include
-                                details like the size of a jar, or the number of cans in a pack. String.
-                                128 character maximum. Unique.
+                                The name of a Measure that is used during a Transaction that determines the manner in
+                                which an Item's price is calculated. If purchasing in bulk, the price would be
+                                determined by the number of pounds or ounces, for example. String. 32 character maximum.
+                                Unique.
                             </td>
                             <td>yes</td>
                         </tr>
                         <tr>
-                            <td>Category</td>
+                            <td>Symbol</td>
                             <td>
-                                The group the Item belongs to (e.g. 'Food', 'Groceries', etc.). Useful
-                                when producing Reports.
+                                2 character symbol to use in place of the Measure Name. Convenient and traditional,
+                                since pounds and ounces are usually notated in the forms 'lb' and 'oz' respectively.
+                                String. 2 character maximum. Unique.
                             </td>
                             <td>yes</td>
                         </tr>

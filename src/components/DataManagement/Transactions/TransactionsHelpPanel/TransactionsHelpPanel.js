@@ -7,31 +7,23 @@ const transactionsHelpPanel = () => {
             <div className="row">
                 <div className="col-md-6">
                     <p className="font-weight-bold">
-                        About Items
+                        About Transactions
                     </p>
                     <p>
-                        Items are the things purchased from a Merchant when a Transaction is made. The
-                        manner in which Items are distinguished is at the User's discretion. They can be
-                        named generically (e.g. 'Beer') or by one or more variations, like brand or volume,
-                        for example (e.g. 'Bitburger Beer' or 'Stiegel 0.5L 4-Pack').
+                        Transactions represent an exchange of money for goods or services. They model a receipt or
+                        invoice. They include all the details, such as when the Transaction was made, where or with who,
+                        and what Items were purchased, how many and at what cost.
                     </p>
                     <p>
-                        Each Item must be assigned to a Category, which allows for Reports that analyze
-                        data by groups of Items. If a relevant Category does not exist when creating an
-                        Item, a new Category can be created by clicking
+                        Each Transaction must be assigned to a Merchant. If a the Merchant does not exist when creating
+                        a Transaction, a new Merchant can be created by clicking
                         the <i className="fa fa-plus pr-1 pl-1" aria-hidden="true"/> icon appended to
-                        the Category Select Dropdown.
-                    </p>
-                    <p>
-                        Each Item Name must be nor more than 128 characters long and must be unique.
-                    </p>
-                    <p>
-                        An Item can only be deleted if it has no associated Transactions.
+                        the Merchant Select Dropdown.
                     </p>
                 </div>
                 <div className="col-md-6">
                     <p className="font-weight-bold">
-                        Item Properties
+                        Transaction Properties
                     </p>
                     <table className="table table-striped table-hover">
                         <thead>
@@ -44,23 +36,21 @@ const transactionsHelpPanel = () => {
                         <tbody>
                         <tr>
                             <td>ID</td>
-                            <td>Item identifier in the Expense Tracker Database. Number.</td>
+                            <td>Transaction identifier in the Expense Tracker Database. Number.</td>
                             <td>(generated)</td>
                         </tr>
                         <tr>
-                            <td>Name</td>
+                            <td>Date</td>
                             <td>
-                                The name of the Item that was purchased in a Transaction. May include
-                                details like the size of a jar, or the number of cans in a pack. String.
-                                128 character maximum. Unique.
+                                The date and time when a Transaction was made.
                             </td>
                             <td>yes</td>
                         </tr>
                         <tr>
-                            <td>Category</td>
+                            <td>Merchant</td>
                             <td>
-                                The group the Item belongs to (e.g. 'Food', 'Groceries', etc.). Useful
-                                when producing Reports.
+                                Where the Transaction was made. The party in the Transaction who received money for
+                                goods or services.
                             </td>
                             <td>yes</td>
                         </tr>
