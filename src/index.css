@@ -13,6 +13,10 @@ div.stateMessage {
     color: #ff7a00;
 }
 
+input.form-control-size-5 {
+    max-width: 5rem;
+}
+
 .table-striped tbody tr:nth-of-type(odd) {
     background-color: #f8f9fa;
 }

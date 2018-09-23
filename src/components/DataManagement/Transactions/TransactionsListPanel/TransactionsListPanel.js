@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from 'prop-types';
+import moment from "moment";
 
 const transactionsListPanel = (props) => {
     return (
@@ -24,7 +25,7 @@ const transactionsListPanel = (props) => {
                         return(
                             <tr key={transaction.id}>
                                 <th scope="row">{transaction.id}</th>
-                                <td>{transaction.date}</td>
+                                <td>{moment(transaction.date).format('MM/DD/YYYY, hh:mm A')}</td>
                                 <td>{transaction.merchant.name}</td>
                                 <td>
                                     <div className="d-block d-md-none">
