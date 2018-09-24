@@ -25,6 +25,8 @@ class ItemsTabPanel extends Component {
             itemId: 0,
             itemName: '',
             itemCategoryId: 0,
+            categoryName: '',
+            showCategoryCreate: false,
             itemList: [
                 {
                     id: 1,
@@ -158,6 +160,22 @@ class ItemsTabPanel extends Component {
         this.setState({itemCategoryId: id});
     }
 
+    getCategoryName() {
+        return this.state.categoryName;
+    }
+
+    setCategoryName(name) {
+        this.setState({categoryName: name});
+    }
+
+    showCategoryCreate() {
+        return this.state.showCategoryCreate;
+    }
+
+    setShowCategoryCreate(show) {
+        this.setState({showCategoryCreate: show});
+    }
+
     getItemList() {
         return this.state.itemList;
     }
@@ -286,6 +304,32 @@ class ItemsTabPanel extends Component {
         }
     };
 
+    saveCategory = () => {
+        console.log("saveCategory");
+        const category = {
+            id: this.getCategoryList().length + 1,
+            name: this.getCategoryName()
+        };
+        const categories = [...this.getCategoryList()];
+        categories.push(category);
+        categories.sort((a, b) => a.name.localeCompare(b.name));
+        this.setCategoryList(categories);
+        this.setItemCategoryId(category.id);
+        this.revertCategoryCreate();
+    };
+
+    createCategory = () => {
+        console.log("createCategory");
+        this.setCategoryName(null);
+        this.setShowCategoryCreate(true);
+    };
+
+    revertCategoryCreate = () => {
+        console.log("revertCategoryCreate");
+        this.setCategoryName(null);
+        this.setShowCategoryCreate(false);
+    };
+
     /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> VALUE CHANGE HANDLERS */
 
     itemNameChanged = (event) => {
@@ -368,6 +412,8 @@ class ItemsTabPanel extends Component {
                                         itemId={this.getItemId()}
                                         itemName={this.getItemName()}
                                         itemCategoryId={this.getItemCategoryId()}
+                                        categoryName={this.getCategoryName()}
+                                        showCategoryCreate={this.showCategoryCreate()}
                                         categoryList={this.getCategoryList()}
                                         saveAction={this.save}
                                         editAction={this.edit}
@@ -375,8 +421,12 @@ class ItemsTabPanel extends Component {
                                         createAction={this.create}
                                         revertAction={this.revert}
                                         deleteAction={this.delete}
+                                        saveCategoryAction={this.saveCategory}
+                                        createCategoryAction={this.createCategory}
+                                        revertCategoryCreateAction={this.revertCategoryCreate}
                                         itemNameChangeHandler={(event) => this.itemNameChanged(event)}
-                                        itemCategoryChangeHandler={(event) => this.itemCategoryChanged(event)}/>
+                                        itemCategoryChangeHandler={(event) => this.itemCategoryChanged(event)}
+                                        categoryNameChangeHandler={(event) => this.categoryNameChanged(event)}/>
                     </div>
                     <div className={this.getSelectedTabPaneClassName(helpTab)}
                          id="guide"

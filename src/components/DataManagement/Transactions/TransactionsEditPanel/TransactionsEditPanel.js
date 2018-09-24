@@ -83,29 +83,66 @@ const transactionsEditPanel = (props) => {
                                     <div className="form-group">
                                         <label htmlFor="transactionMerchant">Merchant *</label>
                                         <div className="input-group">
-                                            <select className="custom-select"
-                                                    id="transactionMerchant"
-                                                    required={true}
-                                                    disabled={props.isEditFormDisabled}
-                                                    onChange={props.transactionMerchantChangeHandler}
-                                                    value={props.transactionMerchantId}>
-                                                <option>Choose...</option>
-                                                {
-                                                    props.merchantList.map((merchant) => {
-                                                        return (
-                                                            <option key={merchant.id}
-                                                                    value={merchant.id}>
-                                                                {merchant.name}
-                                                            </option>
-                                                        );
-                                                    })
-                                                }
-                                            </select>
-                                            <div className="input-group-append">
-                                                <span className="input-group-text">
-                                                    <i className="fa fa-plus" aria-hidden="true"/>
-                                                </span>
-                                            </div>
+                                            <Render if={!props.showMerchantCreate}>
+                                                <div className="input-group">
+                                                    <select className="custom-select"
+                                                            id="transactionMerchant"
+                                                            required={true}
+                                                            disabled={props.isEditFormDisabled}
+                                                            onChange={props.merchantNameChangeHandler}
+                                                            value={props.transactionMerchantId}>
+                                                        <option>Choose...</option>
+                                                        {
+                                                            props.merchantList.map((merchant) => {
+                                                                return (
+                                                                    <option key={merchant.id}
+                                                                            value={merchant.id}>
+                                                                        {merchant.name}
+                                                                    </option>
+                                                                );
+                                                            })
+                                                        }
+                                                    </select>
+                                                    <div className="input-group-append input-group-clickable"
+                                                         onClick={props.createMerchantAction}>
+                                                        <span className="input-group-text">
+                                                            <i className="fa fa-plus" aria-hidden="true"/>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <small className="form-text text-muted">
+                                                    Select a Merchant or click the <i className="fa fa-plus" aria-hidden="true"/> button
+                                                    to add a new Merchant.
+                                                </small>
+                                            </Render>
+                                            <Render if={props.showMerchantCreate}>
+                                                <div className="input-group">
+                                                    <input type="text"
+                                                           className="form-control"
+                                                           id="itemCategory"
+                                                           required={true}
+                                                           disabled={props.isEditFormDisabled}
+                                                           onChange={props.merchantNameChangeHandler}
+                                                           value={props.merchantName}/>
+                                                    <div className="input-group-append input-group-clickable"
+                                                         onClick={props.saveMerchantAction}>
+                                                        <span className="input-group-text">
+                                                            <i className="fa fa-save" aria-hidden="true"/>
+                                                        </span>
+                                                    </div>
+                                                    <div className="input-group-append input-group-clickable"
+                                                         onClick={props.revertMerchantCreateAction}>
+                                                        <span className="input-group-text">
+                                                            <i className="fa fa-undo" aria-hidden="true"/>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <small className="form-text text-muted">
+                                                    Enter a Merchant name and click the <i className="fa fa-save" aria-hidden="true"/> button
+                                                    to save, or click the <i className="fa fa-undo" aria-hidden="true"/> button to revert to
+                                                    the select dropdown.
+                                                </small>
+                                            </Render>
                                         </div>
                                     </div>
                                 </div>
@@ -133,7 +170,7 @@ const transactionsEditPanel = (props) => {
                                                 <th scope="col">Item</th>
                                                 <th scope="col">Quantity</th>
                                                 <th scope="col">Measure</th>
-                                                <th scope="col">Price</th>
+                                                <th scope="col">Price/Measure</th>
                                                 <th scope="col">Subtotal</th>
                                                 <th scope="col">Actions</th>
                                             </tr>
@@ -144,41 +181,90 @@ const transactionsEditPanel = (props) => {
                                                     return (
                                                         <tr key={transactionItem.key}>
                                                             <td>
-                                                                <select className="form-control"
-                                                                        required={true}
-                                                                        disabled={props.isEditFormDisabled}
-                                                                        onChange={(event) => props.transactionItemItemChangeHandler(event, index)}
-                                                                        value={transactionItem.itemId}>
-                                                                    <option value='0'>Choose...</option>
-                                                                    <option value='1'>Pilsner Urquell - 4pk 0.5L Cans</option>
-                                                                    <option value='2'>Oly Kraut Original Sauerkraut</option>
-                                                                    <option value='3'>Chocolove Chocolate Bar</option>
-                                                                </select>
-
-                                                                {/*<div className="input-group">
-                                                                    <input type="text"
-                                                                           className="form-control"
-                                                                           placeholder="Item"/>
-                                                                    <select className="custom-select">
-                                                                        <option>Choose...</option>
-                                                                        <option>Beer</option>
-                                                                        <option>Food</option>
-                                                                        <option>Home</option>
-                                                                    </select>
-                                                                    <div className="input-group-append">
-                                                                        <span className="input-group-text">
-                                                                            <i className="fa fa-plus" aria-hidden="true"/>
-                                                                        </span>
-                                                                        <span className="input-group-text">
-                                                                            <i className="fa fa-save" aria-hidden="true"/>
-                                                                        </span>
-                                                                        <span className="input-group-text">
-                                                                            <i className="fa fa-undo" aria-hidden="true"/>
-                                                                        </span>
-                                                                    </div>
-                                                                </div>*/}
-
-
+                                                                <div className="input-group">
+                                                                    <Render if={!transactionItem.showItemCreate}>
+                                                                        <select className="custom-select"
+                                                                                required={true}
+                                                                                disabled={props.isEditFormDisabled}
+                                                                                onChange={(event) => props.transactionItemItemChangeHandler(event, index)}
+                                                                                value={transactionItem.itemId}>
+                                                                            <option>Choose...</option>
+                                                                            {
+                                                                                props.itemList.map((item) => {
+                                                                                    return (
+                                                                                        <option key={item.id}
+                                                                                                value={item.id}>
+                                                                                            {item.name}
+                                                                                        </option>
+                                                                                    );
+                                                                                })
+                                                                            }
+                                                                        </select>
+                                                                        <div className="input-group-append input-group-clickable"
+                                                                             onClick={() => props.createItemAction (index)}>
+                                                                            <span className="input-group-text">
+                                                                                <i className="fa fa-plus" aria-hidden="true"/>
+                                                                            </span>
+                                                                        </div>
+                                                                    </Render>
+                                                                    <Render if={transactionItem.showItemCreate}>
+                                                                        <input type="text"
+                                                                               className="form-control"
+                                                                               placeholder="Item"
+                                                                               required={true}
+                                                                               disabled={props.isEditFormDisabled}
+                                                                               onChange={(event) => props.itemNameChangeHandler(event, index)}
+                                                                               value={transactionItem.itemName}/>
+                                                                        <Render if={!transactionItem.showCategoryCreate}>
+                                                                            <select className="custom-select"
+                                                                                    required={true}
+                                                                                    disabled={props.isEditFormDisabled}
+                                                                                    onChange={(event) => props.categoryChangeHandler(event, index)}
+                                                                                    value={transactionItem.categoryId}>
+                                                                                <option>Choose...</option>
+                                                                                {
+                                                                                    props.categoryList.map((category) => {
+                                                                                        return (
+                                                                                            <option key={category.id}
+                                                                                                    value={category.id}>
+                                                                                                {category.name}
+                                                                                            </option>
+                                                                                        );
+                                                                                    })
+                                                                                }
+                                                                            </select>
+                                                                        </Render>
+                                                                        <Render if={transactionItem.showCategoryCreate}>
+                                                                            <input type="text"
+                                                                                   className="form-control"
+                                                                                   placeholder="Category"
+                                                                                   required={true}
+                                                                                   disabled={props.isEditFormDisabled}
+                                                                                   onChange={(event) => props.categoryNameChangeHandler(event, index)}
+                                                                                   value={transactionItem.categoryName}/>
+                                                                        </Render>
+                                                                        <Render if={!transactionItem.showCategoryCreate}>
+                                                                            <div className="input-group-append input-group-clickable"
+                                                                                 onClick={() => props.createCategoryAction (index)}>
+                                                                                <span className="input-group-text">
+                                                                                    <i className="fa fa-plus" aria-hidden="true"/>
+                                                                                </span>
+                                                                            </div>
+                                                                        </Render>
+                                                                        <div className="input-group-append input-group-clickable"
+                                                                             onClick={() => props.saveItemAction (index)}>
+                                                                            <span className="input-group-text">
+                                                                                <i className="fa fa-save" aria-hidden="true"/>
+                                                                            </span>
+                                                                        </div>
+                                                                        <div className="input-group-append input-group-clickable"
+                                                                             onClick={() => props.revertItemCreateAction(index)}>
+                                                                            <span className="input-group-text">
+                                                                                <i className="fa fa-undo" aria-hidden="true"/>
+                                                                            </span>
+                                                                        </div>
+                                                                    </Render>
+                                                                </div>
                                                             </td>
                                                             <td>
                                                                 <input type="number"
@@ -235,9 +321,9 @@ const transactionsEditPanel = (props) => {
                                         </table>
                                     </Render>
                                     <Render if={props.transactionItemList === undefined || props.transactionItemList.length < 1}>
-                                        <p className="text-muted">
-                                            <small>This Transaction does not have any Transaction Items.</small>
-                                        </p>
+                                        <small className="form-text text-muted">
+                                            This Transaction does not have any Transaction Items.
+                                        </small>
                                     </Render>
                                 </div>
                             </div>
@@ -307,6 +393,8 @@ transactionsEditPanel.propTypes = {
         PropTypes.string,
         PropTypes.number
     ]).isRequired,
+    merchantName: PropTypes.string,
+    showMerchantCreate: PropTypes.bool.isRequired,
     transactionItemList: PropTypes.oneOfType([
         PropTypes.object,
         PropTypes.array
@@ -314,6 +402,8 @@ transactionsEditPanel.propTypes = {
     transactionItemCount: PropTypes.number.isRequired,
     transactionItemGrandTotal: PropTypes.number.isRequired,
     merchantList: PropTypes.array.isRequired,
+    itemList: PropTypes.array.isRequired,
+    categoryList: PropTypes.array.isRequired,
     saveAction: PropTypes.func.isRequired,
     editAction: PropTypes.func.isRequired,
     cloneAction: PropTypes.func.isRequired,
@@ -322,12 +412,23 @@ transactionsEditPanel.propTypes = {
     deleteAction: PropTypes.func.isRequired,
     createTransactionItemAction: PropTypes.func.isRequired,
     deleteTransactionItemAction: PropTypes.func.isRequired,
+    saveMerchantAction: PropTypes.func.isRequired,
+    createMerchantAction: PropTypes.func.isRequired,
+    revertMerchantCreateAction: PropTypes.func.isRequired,
+    saveItemAction: PropTypes.func.isRequired,
+    createItemAction: PropTypes.func.isRequired,
+    createCategoryAction: PropTypes.func.isRequired,
+    revertItemCreateAction: PropTypes.func.isRequired,
     transactionDateChangeHandler: PropTypes.func.isRequired,
     transactionMerchantChangeHandler: PropTypes.func.isRequired,
     transactionItemItemChangeHandler: PropTypes.func.isRequired,
     transactionItemMeasureChangeHandler: PropTypes.func.isRequired,
     transactionItemQuantityChangeHandler: PropTypes.func.isRequired,
     transactionItemPriceChangeHandler: PropTypes.func.isRequired,
+    merchantNameChangeHandler: PropTypes.func.isRequired,
+    itemNameChangeHandler: PropTypes.func.isRequired,
+    categoryChangeHandler: PropTypes.func.isRequired,
+    categoryNameChangeHandler: PropTypes.func.isRequired
 };
 
 export default transactionsEditPanel;

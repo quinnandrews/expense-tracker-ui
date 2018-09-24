@@ -86,32 +86,67 @@ const itemsEditPanel = (props) => {
                                 <div className="col-md-6">
                                     <div className="form-group">
                                         <label htmlFor="itemCategory">Category *</label>
-                                        <div className="input-group">
-                                            <select className="custom-select"
-                                                    id="itemCategory"
-                                                    aria-label="Item Category Select Options"
-                                                    required={true}
-                                                    disabled={props.isEditFormDisabled}
-                                                    onChange={props.itemCategoryChangeHandler}
-                                                    value={props.itemCategoryId}>
-                                                <option>Choose...</option>
-                                                {
-                                                    props.categoryList.map((category) => {
-                                                        return (
-                                                            <option key={category.id}
-                                                                    value={category.id}>
-                                                                {category.name}
-                                                            </option>
-                                                        );
-                                                    })
-                                                }
-                                            </select>
-                                            <div className="input-group-append">
-                                                <span className="input-group-text">
-                                                    <i className="fa fa-plus" aria-hidden="true"/>
-                                                </span>
+                                        <Render if={!props.showCategoryCreate}>
+                                            <div className="input-group">
+                                                <select className="custom-select"
+                                                        id="itemCategory"
+                                                        aria-label="Item Category Select Options"
+                                                        required={true}
+                                                        disabled={props.isEditFormDisabled}
+                                                        onChange={props.itemCategoryChangeHandler}
+                                                        value={props.itemCategoryId}>
+                                                    <option>Choose...</option>
+                                                    {
+                                                        props.categoryList.map((category) => {
+                                                            return (
+                                                                <option key={category.id}
+                                                                        value={category.id}>
+                                                                    {category.name}
+                                                                </option>
+                                                            );
+                                                        })
+                                                    }
+                                                </select>
+                                                <div className="input-group-append input-group-clickable"
+                                                     onClick={props.createCategoryAction}>
+                                                    <span className="input-group-text">
+                                                        <i className="fa fa-plus" aria-hidden="true"/>
+                                                    </span>
+                                                </div>
                                             </div>
-                                        </div>
+                                            <small className="form-text text-muted">
+                                                Select a Category or click the <i className="fa fa-plus" aria-hidden="true"/> button
+                                                to add a new Category.
+                                            </small>
+                                        </Render>
+                                        <Render if={props.showCategoryCreate}>
+                                            <div className="input-group">
+                                                <input type="text"
+                                                       className="form-control"
+                                                       id="itemCategory"
+                                                       required={true}
+                                                       disabled={props.isEditFormDisabled}
+                                                       onChange={props.categoryNameChangeHandler}
+                                                       value={props.categoryName}/>
+                                                <div className="input-group-append input-group-clickable"
+                                                     onClick={props.saveCategoryAction}>
+                                                    <span className="input-group-text">
+                                                        <i className="fa fa-save" aria-hidden="true"/>
+                                                    </span>
+                                                </div>
+                                                <div className="input-group-append input-group-clickable"
+                                                     onClick={props.revertCategoryCreateAction}>
+                                                    <span className="input-group-text">
+                                                        <i className="fa fa-undo" aria-hidden="true"/>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <small className="form-text text-muted">
+                                                Enter a Category name and click the <i className="fa fa-save" aria-hidden="true"/> button
+                                                to save, or click the <i className="fa fa-undo" aria-hidden="true"/> button to revert to
+                                                the select dropdown.
+                                            </small>
+                                        </Render>
                                     </div>
                                 </div>
                             </div>
@@ -181,6 +216,8 @@ itemsEditPanel.propTypes = {
         PropTypes.string,
         PropTypes.number
     ]).isRequired,
+    categoryName: PropTypes.string,
+    showCategoryCreate: PropTypes.bool.isRequired,
     categoryList: PropTypes.array.isRequired,
     saveAction: PropTypes.func.isRequired,
     editAction: PropTypes.func.isRequired,
@@ -188,8 +225,12 @@ itemsEditPanel.propTypes = {
     createAction: PropTypes.func.isRequired,
     revertAction: PropTypes.func.isRequired,
     deleteAction: PropTypes.func.isRequired,
+    saveCategoryAction: PropTypes.func.isRequired,
+    createCategoryAction: PropTypes.func.isRequired,
+    revertCategoryCreateAction: PropTypes.func.isRequired,
     itemNameChangeHandler: PropTypes.func.isRequired,
     itemCategoryChangeHandler: PropTypes.func.isRequired,
+    categoryNameChangeHandler: PropTypes.func.isRequired
 };
 
 export default itemsEditPanel;

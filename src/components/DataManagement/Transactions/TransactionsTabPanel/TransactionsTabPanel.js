@@ -4,6 +4,7 @@ import TransactionsEditPanel from "../TransactionsEditPanel/TransactionsEditPane
 import TransactionsListPanel from "../TransactionsListPanel/TransactionsListPanel";
 import PropTypes from "prop-types";
 import moment from "moment";
+import ItemsEditPanel from "../../Items/ItemsEditPanel/ItemsEditPanel";
 
 const listTab = 'listTab';
 const editTab = 'editTab';
@@ -31,6 +32,8 @@ class TransactionsTabPanel extends Component {
             transactionItemList: [],
             transactionItemCount: 0,
             transactionItemGrandTotal: 0,
+            merchantName: '',
+            showMerchantCreate: false,
             transactionList: [
                 {
                     id: 1,
@@ -72,6 +75,42 @@ class TransactionsTabPanel extends Component {
                 {
                     id: 3,
                     name: "Meat, Cheese, Bread"
+                }
+            ],
+            itemList: [
+                {
+                    id: 1,
+                    name: "Pilsner Urquell - 4pk 0.5L Cans",
+                    category: {
+                        id: 1,
+                        name: "Beer"
+                    }
+                },
+                {
+                    id: 2,
+                    name: "Oly Kraut Original Sauerkraut",
+                    category: {
+                        id: 2,
+                        name: "Food"
+                    }
+                },
+                {
+                    id: 3,
+                    name: "Chocolove Chocolate Bar",
+                    category: {
+                        id: 2,
+                        name: "Food"
+                    }
+                }
+            ],
+            categoryList: [
+                {
+                    id: 1,
+                    name: "Beer"
+                },
+                {
+                    id: 2,
+                    name: "Food"
                 }
             ]
         };
@@ -171,6 +210,22 @@ class TransactionsTabPanel extends Component {
         this.setState({transactionMerchantId: id});
     }
 
+    getMerchantName() {
+        return this.state.merchantName;
+    }
+
+    setMerchantName(name) {
+        this.setState({merchantName: name});
+    }
+
+    showMerchantCreate() {
+        return this.state.showMerchantCreate;
+    }
+
+    setShowMerchantCreate(show) {
+        this.setState({showMerchantCreate: show});
+    }
+
     getTransactionItemList() {
         return this.state.transactionItemList;
     }
@@ -208,7 +263,23 @@ class TransactionsTabPanel extends Component {
     }
 
     setMerchantList(list) {
-        this.setState({transactionList: list});
+        this.setState({merchantList: list});
+    }
+
+    getItemList() {
+        return this.state.itemList;
+    }
+
+    setItemList(list) {
+        this.setState({itemList: list});
+    }
+
+    getCategoryList() {
+        return this.state.categoryList;
+    }
+
+    setCategoryList(list) {
+        this.setState({categoryList: list});
     }
 
     getCurrentDate() {
@@ -347,9 +418,14 @@ class TransactionsTabPanel extends Component {
             id: undefined,
             transactionId: undefined,
             itemId: undefined,
+            itemName: '',
+            showItemCreate: false,
+            categoryId: undefined,
+            categoryName: '',
+            showCategoryCreate: false,
             measureId: 1,
-            price: undefined,
-            quantity: undefined,
+            price: null,
+            quantity: null,
             subTotal: undefined,
             itemCount: undefined
         };
@@ -400,6 +476,107 @@ class TransactionsTabPanel extends Component {
         this.setTransactionItemGrandTotal(transactionItemGrandTotal);
     }
 
+    saveMerchant = () => {
+        console.log("saveMerchant");
+        const merchant = {
+            id: this.getMerchantList().length + 1,
+            name: this.getMerchantName()
+        };
+        const merchants = [...this.getMerchantList()];
+        merchants.push(merchant);
+        merchants.sort((a, b) => a.name.localeCompare(b.name));
+        this.setMerchantList(merchants);
+        this.setTransactionMerchantId(merchant.id);
+        this.revertMerchantCreate();
+    };
+
+    createMerchant = () => {
+        console.log("createMerchant");
+        this.setMerchantName(null);
+        this.setShowMerchantCreate(true);
+    };
+
+    revertMerchantCreate = () => {
+        console.log("revertMerchantCreate");
+        this.setMerchantName(null);
+        this.setShowMerchantCreate(false);
+    };
+
+    saveItem = (index) => {
+        console.log("saveItem");
+        const transactionItems = [...this.getTransactionItemList()];
+        const transactionItem = transactionItems[index];
+        const newId = this.getItemList().length + 1;
+        let item = null;
+        let category = null;
+        if (transactionItem.categoryId !== 0) {
+            // created item but selected category
+            item = {
+                id: newId,
+                name: transactionItem.itemName,
+                category: {
+                    id: transactionItem.categoryId
+                }
+            };
+        } else {
+            // created item and created category
+            category = {
+                //id: this.getCategoryList().length + 1, No category list yet
+                id: this.getCategoryList().length + 1,
+                name: transactionItem.categoryName
+            };
+            const categories = [...this.getCategoryList()];
+            categories.push(category);
+            categories.sort((a, b) => a.name.localeCompare(b.name));
+            this.setCategoryList(categories);
+            item = {
+                id: newId,
+                name: transactionItem.itemName,
+                category: {
+                    id: category.id
+                }
+            };
+        }
+        const items = [...this.getItemList()];
+        items.push(item);
+        items.sort((a, b) => a.name.localeCompare(b.name));
+        this.setItemList(items);
+        transactionItem.itemId = item.id;
+        this.revertItemCreate(index);
+    };
+
+    createItem = (index) => {
+        console.log("createItem");
+        const transactionItems = [...this.getTransactionItemList()];
+        const transactionItem = transactionItems[index];
+        transactionItem.itemName = '';
+        transactionItem.categoryId = 0;
+        transactionItem.categoryName = '';
+        transactionItem.showItemCreate = true;
+        transactionItem.showCategoryCreate = false;
+        this.setTransactionItemList(transactionItems);
+    };
+
+    createCategory = (index) => {
+        console.log("createCategory");
+        const transactionItems = [...this.getTransactionItemList()];
+        const transactionItem = transactionItems[index];
+        transactionItem.showCategoryCreate = true;
+        this.setTransactionItemList(transactionItems);
+    };
+
+    revertItemCreate = (index) => {
+        console.log("revertItemCreate");
+        const transactionItems = [...this.getTransactionItemList()];
+        const transactionItem = transactionItems[index];
+        transactionItem.itemName = '';
+        transactionItem.categoryId = 0;
+        transactionItem.categoryName = '';
+        transactionItem.showItemCreate = false;
+        transactionItem.showCategoryCreate = false;
+        this.setTransactionItemList(transactionItems);
+    };
+
     /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> VALUE CHANGE HANDLERS */
 
     transactionDateChanged(event) {
@@ -414,6 +591,27 @@ class TransactionsTabPanel extends Component {
         const transactionItems = [...this.getTransactionItemList()];
         const transactionItem = transactionItems[index];
         transactionItem.itemId = event.target.value;
+        this.setTransactionItemList(transactionItems);
+    }
+
+    itemNameChanged(event, index) {
+        const transactionItems = [...this.getTransactionItemList()];
+        const transactionItem = transactionItems[index];
+        transactionItem.itemName = event.target.value;
+        this.setTransactionItemList(transactionItems);
+    }
+
+    categoryChanged(event, index) {
+        const transactionItems = [...this.getTransactionItemList()];
+        const transactionItem = transactionItems[index];
+        transactionItem.categoryId = Number.parseInt(event.target.value);
+        this.setTransactionItemList(transactionItems);
+    }
+
+    categoryNameChanged(event, index) {
+        const transactionItems = [...this.getTransactionItemList()];
+        const transactionItem = transactionItems[index];
+        transactionItem.categoryName = event.target.value;
         this.setTransactionItemList(transactionItems);
     }
 
@@ -519,7 +717,11 @@ class TransactionsTabPanel extends Component {
                                                transactionItemList={this.getTransactionItemList()}
                                                transactionItemCount={this.getTransactionItemCount()}
                                                transactionItemGrandTotal={this.getTransactionItemGrandTotal()}
+                                               merchantName={this.getMerchantName()}
+                                               showMerchantCreate={this.showMerchantCreate()}
                                                merchantList={this.getMerchantList()}
+                                               itemList={this.getItemList()}
+                                               categoryList={this.getCategoryList()}
                                                saveAction={this.save}
                                                editAction={this.edit}
                                                cloneAction={this.clone}
@@ -528,12 +730,23 @@ class TransactionsTabPanel extends Component {
                                                deleteAction={this.delete}
                                                createTransactionItemAction={this.createTransactionItem}
                                                deleteTransactionItemAction={this.deleteTransactionItem}
+                                               saveMerchantAction={this.saveMerchant}
+                                               createMerchantAction={this.createMerchant}
+                                               revertMerchantCreateAction={this.revertMerchantCreate}
+                                               saveItemAction={this.saveItem}
+                                               createItemAction={this.createItem}
+                                               createCategoryAction={this.createCategory}
+                                               revertItemCreateAction={this.revertItemCreate}
                                                transactionDateChangeHandler={(event) => this.transactionDateChanged(event)}
                                                transactionMerchantChangeHandler={(event) => this.transactionMerchantChanged(event)}
                                                transactionItemItemChangeHandler={(event, index) => this.transactionItemItemChanged(event, index)}
                                                transactionItemMeasureChangeHandler={(event, index) => this.transactionItemMeasureChanged(event, index)}
                                                transactionItemPriceChangeHandler={(event, index) => this.transactionItemPriceChanged(event, index)}
-                                               transactionItemQuantityChangeHandler={(event, index) => this.transactionItemQuantityChanged(event, index)}/>
+                                               transactionItemQuantityChangeHandler={(event, index) => this.transactionItemQuantityChanged(event, index)}
+                                               merchantNameChangeHandler={(event) => this.merchantNameChanged(event)}
+                                               itemNameChangeHandler={(event, index) => this.itemNameChanged(event, index)}
+                                               categoryChangeHandler={(event, index) => this.categoryChanged(event, index)}
+                                               categoryNameChangeHandler={(event, index) => this.categoryNameChanged(event, index)}/>
                     </div>
                     <div className={this.getSelectedTabPaneClassName(helpTab)}
                          id="guide"

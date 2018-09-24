@@ -17,6 +17,11 @@ input.form-control-size-5 {
     max-width: 5rem;
 }
 
+.input-group-clickable:hover,
+.input-group-clickable:active {
+    cursor: pointer;
+}
+
 .table-striped tbody tr:nth-of-type(odd) {
     background-color: #f8f9fa;
 }
