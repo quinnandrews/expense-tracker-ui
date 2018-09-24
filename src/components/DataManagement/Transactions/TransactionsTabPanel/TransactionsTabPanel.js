@@ -587,6 +587,10 @@ class TransactionsTabPanel extends Component {
         this.setTransactionMerchantId(event.target.value);
     };
 
+    merchantNameChanged = (event) => {
+        this.setMerchantName(event.target.value);
+    };
+
     transactionItemItemChanged(event, index) {
         const transactionItems = [...this.getTransactionItemList()];
         const transactionItem = transactionItems[index];

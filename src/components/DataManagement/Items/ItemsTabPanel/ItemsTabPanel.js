@@ -340,6 +340,10 @@ class ItemsTabPanel extends Component {
         this.setItemCategoryId(event.target.value);
     };
 
+    categoryNameChanged = (event) => {
+        this.setCategoryName(event.target.value);
+    };
+
     /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> LIFECYCLE METHODS */
 
     componentWillMount() {
