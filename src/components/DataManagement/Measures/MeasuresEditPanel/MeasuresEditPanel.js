@@ -78,6 +78,9 @@ const measuresEditPanel = (props) => {
                                                disabled={props.isEditFormDisabled}
                                                onChange={props.measureNameChangeHandler}
                                                value={props.measureName}/>
+                                        <small className="form-text text-muted">
+                                            32 Characters Maximum. Must be unique.
+                                        </small>
                                     </div>
                                 </div>
                                 <div className="col-md-6">
@@ -91,6 +94,9 @@ const measuresEditPanel = (props) => {
                                                disabled={props.isEditFormDisabled}
                                                onChange={props.measureSymbolChangeHandler}
                                                value={props.measureSymbol}/>
+                                        <small className="form-text text-muted">
+                                            2 Characters Maximum. Must be unique.
+                                        </small>
                                     </div>
                                 </div>
                             </div>

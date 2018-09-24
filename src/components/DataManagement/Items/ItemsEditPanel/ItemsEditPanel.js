@@ -78,6 +78,9 @@ const itemsEditPanel = (props) => {
                                                disabled={props.isEditFormDisabled}
                                                onChange={props.itemNameChangeHandler}
                                                value={props.itemName}/>
+                                        <small className="form-text text-muted">
+                                            128 Characters Maximum. Must be unique.
+                                        </small>
                                     </div>
                                 </div>
                                 <div className="col-md-6">

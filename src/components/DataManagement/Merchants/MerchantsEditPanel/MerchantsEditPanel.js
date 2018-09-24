@@ -78,6 +78,9 @@ const merchantsEditPanel = (props) => {
                                                disabled={props.isEditFormDisabled}
                                                onChange={props.merchantNameChangeHandler}
                                                value={props.merchantName}/>
+                                        <small className="form-text text-muted">
+                                            32 Characters Maximum. Must be unique.
+                                        </small>
                                     </div>
                                 </div>
                                 <div className="col-md-6">

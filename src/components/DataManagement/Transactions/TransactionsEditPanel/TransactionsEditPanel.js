@@ -229,6 +229,7 @@ const transactionsEditPanel = (props) => {
                                                 <td/>
                                                 <td/>
                                                 <td>${props.transactionItemGrandTotal}</td>
+                                                <td/>
                                             </tr>
                                             </tfoot>
                                         </table>

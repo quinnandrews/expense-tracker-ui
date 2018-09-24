@@ -78,6 +78,9 @@ const categoriesEditPanel = (props) => {
                                                disabled={props.isEditFormDisabled}
                                                onChange={props.categoryNameChangeHandler}
                                                value={props.categoryName}/>
+                                        <small className="form-text text-muted">
+                                            32 Characters Maximum. Must be unique.
+                                        </small>
                                     </div>
                                 </div>
                                 <div className="col-md-6"/>
