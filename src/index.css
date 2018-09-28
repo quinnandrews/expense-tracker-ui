@@ -13,6 +13,10 @@ div.stateMessage {
     color: #ff7a00;
 }
 
+label.is-invalid {
+    color: #dc3545;
+}
+
 input.form-control-size-5 {
     max-width: 5rem;
 }
