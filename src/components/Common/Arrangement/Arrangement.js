@@ -12,6 +12,7 @@ const arrangement = (props) => {
         return link === pageName ? 'nav-link active' : 'nav-link';
     }
 
+    /* TODO - Refactor Link to NavLink */
     return (
         <div>
             <header>
