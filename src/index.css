@@ -13,18 +13,37 @@ nav .active {
     text-decoration: #ff7a00 underline;
 }
 
-.sidebar .nav-link {
+nav.sidebar {
+    position: fixed;
+    top: 66px;
+}
+
+nav.sidebar .nav-link {
     color: #6c757d;
 }
 
-.sidebar .nav-link:hover {
+nav.sidebar .nav-link:hover {
     text-underline-position: under;
     text-decoration: #ff7a00 underline;
     color: #343a40;
 }
 
-.sidebar .nav-link.active {
+nav.sidebar .nav-link.active {
     color: #343a40;
+}
+
+section.content-panel {
+    position: relative;
+    top: 66px;
+}
+
+main.content {
+    padding-top: 45px;
+}
+
+div.page-label {
+    position: fixed;
+    width: 100%;
 }
 
 div.stateMessage {

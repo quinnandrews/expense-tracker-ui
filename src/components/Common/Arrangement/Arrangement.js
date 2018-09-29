@@ -17,7 +17,7 @@ const arrangement = (props) => {
     return (
         <Wrapper>
             <header>
-                <nav className="navbar navbar-expand-md navbar-dark bg-dark">
+                <nav className="navbar navbar-expand-md navbar-dark bg-dark fixed-top flex-md-nowrap">
                     <span className="navbar-brand">
                         <Link to={'/'} className="navbar-brand">Expense Tracker</Link>
                     </span>
@@ -114,19 +114,15 @@ const arrangement = (props) => {
                             </li>
                         </ul>
                     </nav>
-                    <div className="col-12 col-md-10 p-0">
+                    <section className="col-12 col-md-10 p-0 ml-auto content-panel">
 
-                        <div className="bg-light border-bottom p-2 pl-3 pr-3 pl-md-4 pr-md-4">{pageLabel}</div>
+                        <div className="bg-light border-bottom p-2 pl-3 pr-3 pl-md-4 pr-md-4 page-label">{pageLabel}</div>
 
-                        <div className="pt-2"/>
-
-                        <main className="mt-3 mb-3">
+                        <main className="mt-3 mb-3 content">
                             {props.children}
                         </main>
 
-                        <div className="pt-3"/>
-
-                    </div>
+                    </section>
                 </div>
             </div>
 
