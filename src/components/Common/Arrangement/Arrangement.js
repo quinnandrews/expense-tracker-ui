@@ -16,7 +16,7 @@ const arrangement = (props) => {
     return (
         <div>
             <header>
-                <nav className="navbar navbar-expand-md navbar-light bg-light border-bottom">
+                <nav className="navbar navbar-expand-md navbar-dark bg-dark">
                     <span className="navbar-brand">
                         <Link to={'/'} className="navbar-brand">Expense Tracker</Link>
                     </span>
@@ -75,11 +75,11 @@ const arrangement = (props) => {
                 <div className="bg-light border-bottom p-2 pl-3 pr-3">{pageLabel}</div>
             </header>
             <div className="pt-2"/>
-            <main className="m-3">
+            <main className="mt-3 mb-3">
                 {props.children}
             </main>
             <div className="pt-3"/>
-            <footer className="text-muted text-center border-top mr-3 ml-3">
+            <footer className="text-muted text-center border-top">
                 <p className="footer-message p-3"><i className="fa fa-copyright"/> 2018 Quinn Andrews</p>
             </footer>
         </div>

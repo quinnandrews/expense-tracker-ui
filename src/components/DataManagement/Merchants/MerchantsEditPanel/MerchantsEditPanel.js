@@ -10,6 +10,7 @@ import Button from "../../../Common/Button/Button";
 import MerchantsTabPanel, {editTab, editTabCreateLabel, editTabEditLabel} from "../MerchantsTabPanel/MerchantsTabPanel";
 import MobileButton from "../../../Common/Button/MobileButton";
 import StateMessage from "../../../Common/StateMessage/StateMessage";
+import FormHeader from "../../../Common/FormHeader/FormHeader";
 
 class MerchantsEditPanel extends Component {
 
@@ -271,31 +272,28 @@ class MerchantsEditPanel extends Component {
     render() {
         return (
             <form>
-                <div className="navbar-inverse bg-inverse mb-3">
-                    <div className="d-md-flex justify-content-between alert alert-secondary bg-light p-3"
-                         role="alert">
-                        <StateMessage message={this.getEditStateMessage()}/>
-                        <ButtonGroup className="d-none d-md-block">
-                            <Button icon={"fa-save"}
-                                    rendered={!this.isFormDisabled()}
-                                    clickListener={this.save}/>
-                            <Button icon={"fa-pencil"}
-                                    rendered={this.isFormDisabled() && !this.isMerchantTransient()}
-                                    clickListener={() => this.edit(this.getMerchantId())}/>
-                            <Button icon={"fa-clone"}
-                                    rendered={!this.isMerchantTransient()}
-                                    clickListener={() => this.clone(this.getMerchantId())}/>
-                            <Button icon={"fa-plus"}
-                                    clickListener={this.create}/>
-                            <Button icon={"fa-undo"}
-                                    rendered={!this.isFormDisabled()}
-                                    clickListener={this.revert}/>
-                            <Button icon={"fa-trash"}
-                                    rendered={!this.isMerchantTransient()}
-                                    clickListener={() => this.delete(this.getMerchantId())}/>
-                        </ButtonGroup>
-                    </div>
-                </div>
+                <FormHeader>
+                    <StateMessage message={this.getEditStateMessage()}/>
+                    <ButtonGroup className="d-none d-md-block">
+                        <Button icon={"fa-save"}
+                                rendered={!this.isFormDisabled()}
+                                clickListener={this.save}/>
+                        <Button icon={"fa-pencil"}
+                                rendered={this.isFormDisabled() && !this.isMerchantTransient()}
+                                clickListener={() => this.edit(this.getMerchantId())}/>
+                        <Button icon={"fa-clone"}
+                                rendered={!this.isMerchantTransient()}
+                                clickListener={() => this.clone(this.getMerchantId())}/>
+                        <Button icon={"fa-plus"}
+                                clickListener={this.create}/>
+                        <Button icon={"fa-undo"}
+                                rendered={!this.isFormDisabled()}
+                                clickListener={this.revert}/>
+                        <Button icon={"fa-trash"}
+                                rendered={!this.isMerchantTransient()}
+                                clickListener={() => this.delete(this.getMerchantId())}/>
+                    </ButtonGroup>
+                </FormHeader>
                 <div className="container-fluid p-0 m-0">
                     <div className="row">
                         <div className="col-9 col-md-12">

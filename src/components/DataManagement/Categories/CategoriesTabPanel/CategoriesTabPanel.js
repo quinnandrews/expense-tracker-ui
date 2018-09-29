@@ -262,41 +262,43 @@ class CategoriesTabPanel extends Component {
         return (
             <div>
                 {/*TABS*/}
-                <ul className="nav nav-tabs mb-3"
+                <ul className="nav nav-tabs mb-3 pl-3 pr-3"
                     role="tablist">
-                    <li className="nav-item">
-                        <a className={this.getSelectedTabClassName(listTab)}
-                           id="list-tab"
-                           data-toggle="tab"
-                           href="#"
-                           role="tab"
-                           aria-controls="list"
-                           aria-selected="true"
-                           onClick={() => this.setSelectedTab(listTab)}>FIND</a>
-                    </li>
-                    <li className="nav-item">
-                        <a className={this.getSelectedTabClassName(editTab)}
-                           id="editor-tab"
-                           data-toggle="tab"
-                           href="#"
-                           role="tab"
-                           aria-controls="editor"
-                           aria-selected="false"
-                           onClick={() => this.setSelectedTab(editTab)}>{this.getEditTabLabel()}</a>
-                    </li>
-                    <li className="nav-item">
-                        <a className={this.getSelectedTabClassName(helpTab)}
-                           id="guide-tab"
-                           data-toggle="tab"
-                           href="#"
-                           role="tab"
-                           aria-controls="guide"
-                           aria-selected="false"
-                           onClick={() => this.setSelectedTab(helpTab)}>HELP</a>
-                    </li>
+                    <div className="tabs-container">
+                        <li className="nav-item">
+                            <a className={this.getSelectedTabClassName(listTab)}
+                               id="list-tab"
+                               data-toggle="tab"
+                               href="#"
+                               role="tab"
+                               aria-controls="list"
+                               aria-selected="true"
+                               onClick={() => this.setSelectedTab(listTab)}>FIND</a>
+                        </li>
+                        <li className="nav-item">
+                            <a className={this.getSelectedTabClassName(editTab)}
+                               id="editor-tab"
+                               data-toggle="tab"
+                               href="#"
+                               role="tab"
+                               aria-controls="editor"
+                               aria-selected="false"
+                               onClick={() => this.setSelectedTab(editTab)}>{this.getEditTabLabel()}</a>
+                        </li>
+                        <li className="nav-item">
+                            <a className={this.getSelectedTabClassName(helpTab)}
+                               id="guide-tab"
+                               data-toggle="tab"
+                               href="#"
+                               role="tab"
+                               aria-controls="guide"
+                               aria-selected="false"
+                               onClick={() => this.setSelectedTab(helpTab)}>HELP</a>
+                        </li>
+                    </div>
                 </ul>
                 {/*TAB PANES*/}
-                <div className="tab-content">
+                <div className="tab-content pl-3 pr-3">
                     <div className={this.getSelectedTabPaneClassName(listTab)}
                          id="list"
                          role="tabpanel"

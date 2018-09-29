@@ -1,16 +1,14 @@
 import React from "react";
 import PropTypes from 'prop-types';
 import Render from "../../../Common/Render/Render";
+import FormHeader from "../../../Common/FormHeader/FormHeader";
+import StateMessage from "../../../Common/StateMessage/StateMessage";
 
 const measuresEditPanel = (props) => {
     return (
         <form>
-            <div className="navbar-inverse bg-inverse mb-3">
-                <div className="d-md-flex justify-content-between alert alert-secondary bg-light p-3"
-                     role="alert">
-                    <div className="stateMessage text-uppercase">
-                        {props.editStateMessage}
-                    </div>
+            <FormHeader>
+                    <StateMessage message={props.editStateMessage}/>
                     <div className="btn-group d-none d-md-block"
                          role="group">
                         <Render if={!props.isEditFormDisabled}>
@@ -60,8 +58,7 @@ const measuresEditPanel = (props) => {
                             </button>
                         </Render>
                     </div>
-                </div>
-            </div>
+            </FormHeader>
             <div className="container-fluid p-0 m-0">
                 <div className="row">
                     <div className="col-9 col-md-12">

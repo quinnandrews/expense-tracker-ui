@@ -1,67 +1,64 @@
 import React from "react";
 import PropTypes from 'prop-types';
 import Render from "../../../Common/Render/Render";
+import StateMessage from "../../../Common/StateMessage/StateMessage";
+import FormHeader from "../../../Common/FormHeader/FormHeader";
 
 const categoriesEditPanel = (props) => {
     return (
         <form>
-            <div className="navbar-inverse bg-inverse mb-3">
-                <div className="d-md-flex justify-content-between alert alert-secondary bg-light p-3"
-                     role="alert">
-                    <div className="stateMessage text-uppercase">
-                        {props.editStateMessage}
-                    </div>
-                    <div className="btn-group d-none d-md-block"
-                         role="group">
-                        <Render if={!props.isEditFormDisabled}>
-                            <button type="button"
-                                    className="btn btn-outline-secondary"
-                                    onClick={props.saveAction}>
-                                <i className="fa fa-save pr-2 pl-2"
-                                   aria-hidden="true"/>
-                            </button>
-                        </Render>
-                        <Render if={props.isEditFormDisabled && !props.isCategoryTransient}>
-                            <button type="button"
-                                    className="btn btn-outline-secondary"
-                                    onClick={() => props.editAction(props.categoryId)}>
-                                <i className="fa fa-pencil pr-2 pl-2"
-                                   aria-hidden="true"/>
-                            </button>
-                        </Render>
-                        <Render if={!props.isCategoryTransient}>
-                            <button type="button"
-                                    className="btn btn-outline-secondary"
-                                    onClick={() => props.cloneAction(props.categoryId)}>
-                                <i className="fa fa-clone pr-2 pl-2"
-                                   aria-hidden="true"/>
-                            </button>
-                        </Render>
+            <FormHeader>
+                <StateMessage message={props.editStateMessage}/>
+                <div className="btn-group d-none d-md-block"
+                     role="group">
+                    <Render if={!props.isEditFormDisabled}>
                         <button type="button"
                                 className="btn btn-outline-secondary"
-                                onClick={props.createAction}>
-                            <i className="fa fa-plus pr-2 pl-2"
+                                onClick={props.saveAction}>
+                            <i className="fa fa-save pr-2 pl-2"
                                aria-hidden="true"/>
                         </button>
-                        <Render if={!props.isEditFormDisabled}>
-                            <button type="button"
-                                    className="btn btn-outline-secondary"
-                                    onClick={props.revertAction}>
-                                <i className="fa fa-undo pr-2 pl-2"
-                                   aria-hidden="true"/>
-                            </button>
-                        </Render>
-                        <Render if={!props.isCategoryTransient}>
-                            <button type="button"
-                                    className="btn btn-outline-secondary"
-                                    onClick={() => props.deleteAction(props.categoryId)}>
-                                <i className="fa fa-trash pr-2 pl-2"
-                                   aria-hidden="true"/>
-                            </button>
-                        </Render>
-                    </div>
+                    </Render>
+                    <Render if={props.isEditFormDisabled && !props.isCategoryTransient}>
+                        <button type="button"
+                                className="btn btn-outline-secondary"
+                                onClick={() => props.editAction(props.categoryId)}>
+                            <i className="fa fa-pencil pr-2 pl-2"
+                               aria-hidden="true"/>
+                        </button>
+                    </Render>
+                    <Render if={!props.isCategoryTransient}>
+                        <button type="button"
+                                className="btn btn-outline-secondary"
+                                onClick={() => props.cloneAction(props.categoryId)}>
+                            <i className="fa fa-clone pr-2 pl-2"
+                               aria-hidden="true"/>
+                        </button>
+                    </Render>
+                    <button type="button"
+                            className="btn btn-outline-secondary"
+                            onClick={props.createAction}>
+                        <i className="fa fa-plus pr-2 pl-2"
+                           aria-hidden="true"/>
+                    </button>
+                    <Render if={!props.isEditFormDisabled}>
+                        <button type="button"
+                                className="btn btn-outline-secondary"
+                                onClick={props.revertAction}>
+                            <i className="fa fa-undo pr-2 pl-2"
+                               aria-hidden="true"/>
+                        </button>
+                    </Render>
+                    <Render if={!props.isCategoryTransient}>
+                        <button type="button"
+                                className="btn btn-outline-secondary"
+                                onClick={() => props.deleteAction(props.categoryId)}>
+                            <i className="fa fa-trash pr-2 pl-2"
+                               aria-hidden="true"/>
+                        </button>
+                    </Render>
                 </div>
-            </div>
+            </FormHeader>
             <div className="container-fluid p-0 m-0">
                 <div className="row">
                     <div className="col-9 col-md-12">

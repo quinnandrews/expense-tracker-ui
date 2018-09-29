@@ -1,7 +1,7 @@
 body {
     margin: 0;
     padding: 0;
-    font-family: "Open Sans", sans-serif;
+    font-family: "Helvetica", sans-serif;
 }
 
 .navbar .active {
@@ -51,7 +51,9 @@ input.form-control-size-5 {
     background-color: #ffffff;
 }
 
-.nav-tabs, .tab-pane {
+.tabs-container, .tab-pane {
+    display: flex;
+    width: 100%;
     max-width: 960px;
     margin: 0 auto;
 }

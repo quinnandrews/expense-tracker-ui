@@ -1,14 +1,14 @@
 import React from "react";
 import PropTypes from 'prop-types';
+import StateMessage from "../../../Common/StateMessage/StateMessage";
+import FormHeader from "../../../Common/FormHeader/FormHeader";
 
 const categoriesListPanel = (props) => {
     return (
         <div>
-            <div className="alert alert-secondary bg-light p-3">
-                <div className="stateMessage text-uppercase">
-                    {props.listStateMessage}
-                </div>
-            </div>
+            <FormHeader>
+                <StateMessage message={props.listStateMessage}/>
+            </FormHeader>
             <table className="table table-light table-striped table-hover">
                 <thead>
                 <tr>

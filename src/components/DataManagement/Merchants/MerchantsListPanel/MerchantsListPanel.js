@@ -2,6 +2,8 @@ import React, {Component} from "react";
 import PropTypes from 'prop-types';
 import ButtonGroup from "../../../Common/ButtonGroup/ButtonGroup";
 import StateMessage from "../../../Common/StateMessage/StateMessage";
+import FormHeader from "../../../Common/FormHeader/FormHeader";
+import Wrapper from "../../../Common/Wrapper/Wrapper";
 
 class MerchantsListPanel extends Component {
 
@@ -42,12 +44,10 @@ class MerchantsListPanel extends Component {
 
     render() {
         return (
-            <div>
-
-                <div className="alert alert-secondary bg-light p-3">
+            <Wrapper>
+                <FormHeader>
                     <StateMessage message={this.getListStateMessage()}/>
-                </div>
-
+                </FormHeader>
                 <table className="table table-light table-striped table-hover">
                     <thead>
                     <tr>
@@ -67,17 +67,17 @@ class MerchantsListPanel extends Component {
                                         <div className="d-block d-md-none">
                                             <button type="button"
                                                     className="btn btn-secondary btn-block"
-                                                    onClick={() => this.getEditPanel().editAction(merchant.id)}>
+                                                    onClick={() => this.getEditPanel().edit(merchant.id)}>
                                                 <i className="fa fa-pencil"/>
                                             </button>
                                             <button type="button"
                                                     className="btn btn-secondary btn-block"
-                                                    onClick={() => this.getEditPanel().cloneAction(merchant.id)}>
+                                                    onClick={() => this.getEditPanel().clone(merchant.id)}>
                                                 <i className="fa fa-clone"/>
                                             </button>
                                             <button type="button"
                                                     className="btn btn-secondary btn-block"
-                                                    onClick={() => this.getEditPanel().deleteAction(merchant.id)}>
+                                                    onClick={() => this.getEditPanel().delete(merchant.id)}>
                                                 <i className="fa fa-trash"/>
                                             </button>
                                         </div>
@@ -105,7 +105,7 @@ class MerchantsListPanel extends Component {
                     }
                     </tbody>
                 </table>
-            </div>
+            </Wrapper>
         );
     }
 
