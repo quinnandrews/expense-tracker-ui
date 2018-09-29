@@ -284,7 +284,7 @@ class MeasuresTabPanel extends Component {
         return (
             <div>
                 {/*TABS*/}
-                <ul className="nav nav-tabs mb-3 pl-3 pr-3"
+                <ul className="nav nav-tabs mb-3 pl-4 pr-4"
                     role="tablist">
                     <div className="tabs-container">
                         <li className="nav-item">
@@ -320,7 +320,7 @@ class MeasuresTabPanel extends Component {
                     </div>
                 </ul>
                 {/*TAB PANES*/}
-                <div className="tab-content pl-3 pr-3">
+                <div className="tab-content pl-4 pr-4">
                     <div className={this.getSelectedTabPaneClassName(listTab)}
                          id="list"
                          role="tabpanel"

@@ -1,12 +1,30 @@
+html, body, #root, .content-grid, .content-row, .sidebar {
+    height: 100%;
+}
+
 body {
     margin: 0;
     padding: 0;
     font-family: "Helvetica", sans-serif;
 }
 
-.navbar .active {
+nav .active {
     text-underline-position: under;
     text-decoration: #ff7a00 underline;
+}
+
+.sidebar .nav-link {
+    color: #6c757d;
+}
+
+.sidebar .nav-link:hover {
+    text-underline-position: under;
+    text-decoration: #ff7a00 underline;
+    color: #343a40;
+}
+
+.sidebar .nav-link.active {
+    color: #343a40;
 }
 
 div.stateMessage {
@@ -55,7 +73,7 @@ input.form-control-size-5 {
     display: flex;
     width: 100%;
     max-width: 960px;
-    margin: 0 auto;
+    /*margin: 0 auto;*/
 }
 
 /* Footer */
