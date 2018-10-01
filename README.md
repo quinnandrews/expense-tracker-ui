@@ -10,6 +10,21 @@ set of mock data used for development purposes. Consequently, changes you make o
 one page won't be reflected in another. Eventually, it will connect to the 
 expense-tracker-api. 
 
+This app currently contains a lot of experimentation with inheritance. I did this 
+for a variety of reasons: 
+
+1. Having worked with Apache Wicket for many years, using inheritance was natural. 
+2. The React Documentation recommends not using inheritance without providing a 
+sufficient explanation. I wanted to experiment, see what works, what doesn't, what's 
+good about it, what's not so good about it, etc. 
+3. I also wanted to explore ES6 and get to know it better.
+
+This app also plays around with doing something else that may not be considered good 
+practice. In some Component Classes I pass the instance to Children via props, which 
+allows me to call any method I want on the Parent Class. I was surprised that it worked. 
+I thought it would throw an error of some kind, since the preference is to pass method 
+references one by one through props, an exercise that can become rather tedious. 
+
 I have worked with Java Server Faces and Apache Wicket for many years. My approach 
 to React is, therefore, drawn from that experience. My approach to conversion and 
 validation, in particular, is patterned after the way they are handled in JSF and 
