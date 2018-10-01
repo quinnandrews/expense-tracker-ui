@@ -44,7 +44,8 @@ class App extends Component {
         return (
             <BrowserRouter>
                 <Switch>
-                    <Route exact path={'/'} component={Reports}/>
+                    <Route exact path={'/'} component={TransactionsPage}/>
+
                     <Route exact path={contextPath} component={Reports}/>
                     <Route path={reportsPagePath} component={Reports}/>
 
