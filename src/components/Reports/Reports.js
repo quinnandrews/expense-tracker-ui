@@ -2,9 +2,6 @@ import React from 'react';
 import Arrangement from "../Common/Arrangement/Arrangement";
 import * as App from "../../App";
 import ResponsiveContainer from "recharts/es6/component/ResponsiveContainer";
-import AreaChart from "recharts/es6/chart/AreaChart";
-import Area from "recharts/es6/cartesian/Area";
-import ReferenceLine from "recharts/es6/cartesian/ReferenceLine";
 import CartesianGrid from "recharts/es6/cartesian/CartesianGrid";
 import YAxis from "recharts/es6/cartesian/YAxis";
 import XAxis from "recharts/es6/cartesian/XAxis";
@@ -13,12 +10,9 @@ import Bar from "recharts/es6/cartesian/Bar";
 import Legend from "recharts/es6/component/Legend";
 import PieChart from "recharts/es6/chart/PieChart";
 import Pie from "recharts/es6/polar/Pie";
-import Label from "recharts/es6/component/Label";
-import LabelList from "recharts/es6/component/LabelList";
 import Cell from "recharts/es6/component/Cell";
 import {scaleOrdinal, schemeCategory10} from 'd3-scale';
 import LineChart from "recharts/es6/chart/LineChart";
-import Brush from "recharts/es6/cartesian/Brush";
 import Line from "recharts/es6/cartesian/Line";
 
 const colors = scaleOrdinal(schemeCategory10).range();
@@ -70,6 +64,7 @@ const reports = () => {
         <Arrangement pageName={App.reportsPageName}
                      pageLabel={App.reportsPageLabel}>
             <div className="container-fluid">
+                <h2>Some preliminary experimentation with recharts components.</h2>
                 <div className="row">
                     <div className="col-6">
                         <div className="mt-3 mr-1 mb-3 ml-0  p-3 border rounded">
