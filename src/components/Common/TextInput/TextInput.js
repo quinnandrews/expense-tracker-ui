@@ -46,7 +46,7 @@ TextInput.propTypes = {
     value: PropTypes.any,
     placeholder: PropTypes.string,
     required: PropTypes.bool,
-    maxlength: PropTypes.number,
+    maxLength: PropTypes.number,
     disabled: PropTypes.bool,
     converter: PropTypes.instanceOf(Converter),
     validator: PropTypes.instanceOf(Validator),
