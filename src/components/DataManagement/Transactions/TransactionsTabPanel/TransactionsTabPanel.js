@@ -648,7 +648,7 @@ class TransactionsTabPanel extends Component {
 
     /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> LIFECYCLE METHODS */
 
-    componentWillMount() {
+    componentDidMount() {
         const idParam = this.props.idParam;
         if (idParam !== undefined) {
             this.edit(Number.parseInt(idParam));
