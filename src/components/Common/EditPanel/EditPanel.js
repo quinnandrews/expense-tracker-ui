@@ -20,7 +20,7 @@ class EditPanel extends Component {
             editStateMessage: '',
             isFormValid: true,
             isFormDisabled: false,
-            editObject: {id: 0}
+            editObject: this.initEditObject()
         };
     }
 
@@ -249,8 +249,8 @@ class EditPanel extends Component {
 
     /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> LIFECYCLE METHODS */
 
-    componentWillMount() {
-        console.log('componentWillMount()');
+    componentDidMount() {
+        console.log('componentDidMount()');
         const idParam = this.props.idParam;
         if (idParam !== undefined) {
             this.edit(Number.parseInt(idParam, 10));
