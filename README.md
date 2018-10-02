@@ -10,6 +10,10 @@ set of mock data used for development purposes. Consequently, changes you make o
 one page won't be reflected in another. Eventually, it will connect to the 
 expense-tracker-api. 
 
+DEMO: http://expense-tracker-demo.s3-website-us-west-2.amazonaws.com/
+
+## Notes
+
 This app currently contains a lot of experimentation with inheritance. I did this 
 for a variety of reasons: 
 
