@@ -17,7 +17,7 @@ for a variety of reasons:
 2. The React Documentation recommends not using inheritance without providing a 
 sufficient explanation. I wanted to experiment, see what works, what doesn't, what's 
 good about it, what's not so good about it, etc. 
-3. I also wanted to explore ES6 and get to know it better.
+3. I also wanted to explore working with classes in javascript.
 
 This app also plays around with doing something else that may not be considered good 
 practice. In some Component Classes I pass the instance to Children via props, which 
