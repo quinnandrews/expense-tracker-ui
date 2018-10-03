@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Render from "../../../Common/Render/Render";
 import EditPanel from "../../../Common/EditPanel/EditPanel";
 import TextInput from "../../../Common/TextInput/TextInput";
+import InputGroupButton from "../../../Common/Button/InputGroupButton";
 
 class ItemsEditPanel extends EditPanel {
 
@@ -129,13 +130,9 @@ class ItemsEditPanel extends EditPanel {
                                         })
                                     }
                                 </select>
-                                <div className="input-group-append">
-                                    <button className="btn btn-light input-group-text"
-                                            type="button"
-                                            onClick={this.createCategory}>
-                                        <i className="fa fa-plus" aria-hidden="true"/>
-                                    </button>
-                                </div>
+                                <InputGroupButton icon="fa-plus"
+                                                  disabled={this.isFormDisabled()}
+                                                  clickListener={this.createCategory}/>
                             </div>
                             <small className="form-text text-muted">
                                 Select a Category or click the <i className="fa fa-plus"
@@ -155,20 +152,12 @@ class ItemsEditPanel extends EditPanel {
                                        disabled={this.isFormDisabled()}
                                        onChange={(event) => this.updateStateOnChange(event)}
                                        value={this.getCategoryCreateName()}/>
-                                <div className="input-group-append">
-                                    <button className="btn btn-light input-group-text"
-                                            type="button"
-                                            onClick={this.saveCategory}>
-                                        <i className="fa fa-save" aria-hidden="true"/>
-                                    </button>
-                                </div>
-                                <div className="input-group-append">
-                                    <button className="btn btn-light input-group-text"
-                                            type="button"
-                                            onClick={this.revertCategoryCreate}>
-                                        <i className="fa fa-undo" aria-hidden="true"/>
-                                    </button>
-                                </div>
+                                <InputGroupButton icon="fa-save"
+                                                  disabled={this.isFormDisabled()}
+                                                  clickListener={this.saveCategory}/>
+                                <InputGroupButton icon="fa-undo"
+                                                  disabled={this.isFormDisabled()}
+                                                  clickListener={this.revertCategoryCreate}/>
                             </div>
                             <small className="form-text text-muted">
                                 Enter a Category name and click the <i className="fa fa-save"

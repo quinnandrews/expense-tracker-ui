@@ -6,13 +6,15 @@ const button = (props) => {
     return(
         <Render if={props.rendered}>
             <button type="button"
-                    className="btn btn-outline-secondary"
+                    value={props.label}
+                    className={"btn " + props.className}
                     onClick={props.clickListener}
-                    value={props.label}>
+                    disabled={props.disabled}>
                 <Render if={props.icon !== undefined}>
-                    <i className={"fa " + props.icon + " pr-2 pl-2"}
+                    <i className={"fa " + props.icon + " " + props.iconClassName}
                        aria-hidden="true"/>
                 </Render>
+                {props.children}
             </button>
         </Render>
     );
@@ -21,11 +23,15 @@ const button = (props) => {
 button.propTypes = {
     icon: PropTypes.string,
     label: PropTypes.string,
+    className: PropTypes.string,
+    iconClassName: PropTypes.string,
     clickListener: PropTypes.func,
+    disabled: PropTypes.bool,
     rendered: PropTypes.bool
 };
 
 button.defaultProps = {
+    disabled: false,
     rendered: true
 };
 

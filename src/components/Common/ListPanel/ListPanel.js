@@ -4,6 +4,8 @@ import StateMessage from "../../Common/StateMessage/StateMessage";
 import FormHeader from "../../Common/FormHeader/FormHeader";
 import Wrapper from "../../Common/Wrapper/Wrapper";
 import Table from "../Table/Table";
+import ActionButton from "../Button/ActionButton";
+import MobileActionButton from "../Button/MobileActionButton";
 
 class ListPanel extends Component {
 
@@ -60,40 +62,22 @@ class ListPanel extends Component {
     renderStandardActionsCell(objectId) {
         return (
             <td>
-                <div className="d-block d-md-none">
-                    <button type="button"
-                            className="btn btn-secondary btn-block"
-                            onClick={() => this.getEditPanel().edit(objectId)}>
-                        <i className="fa fa-pencil"/>
-                    </button>
-                    <button type="button"
-                            className="btn btn-secondary btn-block"
-                            onClick={() => this.getEditPanel().clone(objectId)}>
-                        <i className="fa fa-clone"/>
-                    </button>
-                    <button type="button"
-                            className="btn btn-secondary btn-block"
-                            onClick={() => this.getEditPanel().delete(objectId)}>
-                        <i className="fa fa-trash"/>
-                    </button>
-                </div>
                 <ButtonGroup className="d-none d-md-block">
-                    <button type="button"
-                            className="btn btn-outline-secondary"
-                            onClick={() => this.getEditPanel().edit(objectId)}>
-                        <i className="fa fa-pencil pr-2 pl-2"/>
-                    </button>
-                    <button type="button"
-                            className="btn btn-outline-secondary"
-                            onClick={() => this.getEditPanel().clone(objectId)}>
-                        <i className="fa fa-clone pr-2 pl-2"/>
-                    </button>
-                    <button type="button"
-                            className="btn btn-outline-secondary"
-                            onClick={() => this.getEditPanel().delete(objectId)}>
-                        <i className="fa fa-trash pr-2 pl-2"/>
-                    </button>
+                    <ActionButton icon="fa-pencil"
+                                  clickListener={() => this.getEditPanel().edit(objectId)}/>
+                    <ActionButton icon="fa-clone"
+                                  clickListener={() => this.getEditPanel().clone(objectId)}/>
+                    <ActionButton icon="fa-trash"
+                                  clickListener={() => this.getEditPanel().delete(objectId)}/>
                 </ButtonGroup>
+                <div className="d-block d-md-none">
+                    <MobileActionButton icon="fa-pencil"
+                                        clickListener={() => this.getEditPanel().edit(objectId)}/>
+                    <MobileActionButton icon="fa-clone"
+                                        clickListener={() => this.getEditPanel().clone(objectId)}/>
+                    <MobileActionButton icon="fa-trash"
+                                        clickListener={() => this.getEditPanel().delete(objectId)}/>
+                </div>
             </td>
         );
     }

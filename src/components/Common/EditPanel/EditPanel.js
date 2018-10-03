@@ -1,8 +1,8 @@
 import React, {Component} from "react";
 import Message from "../../../messages/Message";
 import ButtonGroup from "../../Common/ButtonGroup/ButtonGroup";
-import Button from "../../Common/Button/Button";
-import MobileButton from "../../Common/Button/MobileButton";
+import ActionButton from "../Button/ActionButton";
+import MobileActionButton from "../Button/MobileActionButton";
 import StateMessage from "../../Common/StateMessage/StateMessage";
 import FormHeader from "../../Common/FormHeader/FormHeader";
 import * as Constants from "../../../constants/Constants";
@@ -267,23 +267,23 @@ class EditPanel extends Component {
                 <FormHeader>
                     <StateMessage message={this.getEditStateMessage()}/>
                     <ButtonGroup className="d-none d-md-block">
-                        <Button icon={"fa-save"}
-                                rendered={!this.isFormDisabled()}
-                                clickListener={this.save}/>
-                        <Button icon={"fa-pencil"}
-                                rendered={this.isFormDisabled() && !this.isEditObjectTransient()}
-                                clickListener={() => this.edit(this.getEditObjectId())}/>
-                        <Button icon={"fa-clone"}
-                                rendered={!this.isEditObjectTransient()}
-                                clickListener={() => this.clone(this.getEditObjectId())}/>
-                        <Button icon={"fa-plus"}
-                                clickListener={this.create}/>
-                        <Button icon={"fa-undo"}
-                                rendered={!this.isFormDisabled()}
-                                clickListener={this.revert}/>
-                        <Button icon={"fa-trash"}
-                                rendered={!this.isEditObjectTransient()}
-                                clickListener={() => this.delete(this.getEditObjectId())}/>
+                        <ActionButton icon={"fa-save"}
+                                      rendered={!this.isFormDisabled()}
+                                      clickListener={this.save}/>
+                        <ActionButton icon={"fa-pencil"}
+                                      rendered={this.isFormDisabled() && !this.isEditObjectTransient()}
+                                      clickListener={() => this.edit(this.getEditObjectId())}/>
+                        <ActionButton icon={"fa-clone"}
+                                      rendered={!this.isEditObjectTransient()}
+                                      clickListener={() => this.clone(this.getEditObjectId())}/>
+                        <ActionButton icon={"fa-plus"}
+                                      clickListener={this.create}/>
+                        <ActionButton icon={"fa-undo"}
+                                      rendered={!this.isFormDisabled()}
+                                      clickListener={this.revert}/>
+                        <ActionButton icon={"fa-trash"}
+                                      rendered={!this.isEditObjectTransient()}
+                                      clickListener={() => this.delete(this.getEditObjectId())}/>
                     </ButtonGroup>
                 </FormHeader>
                 <div className="container-fluid p-0 m-0">
@@ -294,23 +294,23 @@ class EditPanel extends Component {
                             </div>
                         </div>
                         <div className="d-md-none col-3">
-                            <MobileButton icon={"fa-save"}
-                                    rendered={!this.isFormDisabled()}
-                                    clickListener={this.save}/>
-                            <MobileButton icon={"fa-pencil"}
-                                    rendered={this.isFormDisabled() && !this.isEditObjectTransient()}
-                                    clickListener={() => this.edit(this.getEditObjectId())}/>
-                            <MobileButton icon={"fa-clone"}
-                                    rendered={!this.isEditObjectTransient()}
-                                    clickListener={() => this.clone(this.getEditObjectId())}/>
-                            <MobileButton icon={"fa-plus"}
-                                    clickListener={this.create}/>
-                            <MobileButton icon={"fa-undo"}
-                                    rendered={!this.isFormDisabled()}
-                                    clickListener={this.revert}/>
-                            <MobileButton icon={"fa-trash"}
-                                    rendered={!this.isEditObjectTransient()}
-                                    clickListener={() => this.delete(this.getEditObjectId())}/>
+                            <MobileActionButton icon={"fa-save"}
+                                                rendered={!this.isFormDisabled()}
+                                                clickListener={this.save}/>
+                            <MobileActionButton icon={"fa-pencil"}
+                                                rendered={this.isFormDisabled() && !this.isEditObjectTransient()}
+                                                clickListener={() => this.edit(this.getEditObjectId())}/>
+                            <MobileActionButton icon={"fa-clone"}
+                                                rendered={!this.isEditObjectTransient()}
+                                                clickListener={() => this.clone(this.getEditObjectId())}/>
+                            <MobileActionButton icon={"fa-plus"}
+                                                clickListener={this.create}/>
+                            <MobileActionButton icon={"fa-undo"}
+                                                rendered={!this.isFormDisabled()}
+                                                clickListener={this.revert}/>
+                            <MobileActionButton icon={"fa-trash"}
+                                                rendered={!this.isEditObjectTransient()}
+                                                clickListener={() => this.delete(this.getEditObjectId())}/>
                         </div>
                     </div>
                 </div>
