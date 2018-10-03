@@ -277,9 +277,9 @@ const transactionsEditPanel = (props) => {
                                                                         disabled={props.isEditFormDisabled}
                                                                         onChange={(event) => props.transactionItemMeasureChangeHandler(event, index)}
                                                                         value={transactionItem.measureId}>
-                                                                    <option value='1'>un</option>
-                                                                    <option value='2'>lb</option>
-                                                                    <option value='3'>oz</option>
+                                                                    <option value='1'>UN</option>
+                                                                    <option value='2'>LB</option>
+                                                                    <option value='3'>OZ</option>
                                                                 </select>
                                                             </td>
                                                             <td>
@@ -290,7 +290,7 @@ const transactionsEditPanel = (props) => {
                                                                        onChange={(event) => props.transactionItemPriceChangeHandler(event, index)}
                                                                        value={transactionItem.price}/>
                                                             </td>
-                                                            <td>${transactionItem.subTotal}</td>
+                                                            <td>${transactionItem.subTotal !== undefined ? transactionItem.subTotal.toFixed(2) : ''}</td>
                                                             <td>
                                                                 <button type="button"
                                                                         className="btn btn-outline-secondary"
@@ -311,7 +311,7 @@ const transactionsEditPanel = (props) => {
                                                 <td>{props.transactionItemCount}</td>
                                                 <td/>
                                                 <td/>
-                                                <td>${props.transactionItemGrandTotal}</td>
+                                                <td>${props.transactionItemGrandTotal !== undefined ? props.transactionItemGrandTotal.toFixed(2) : ''}</td>
                                                 <td/>
                                             </tr>
                                             </tfoot>
