@@ -11,7 +11,7 @@ const formHelpText = (props) => {
                 </small>
             </Render>
             <Render if={props.elementValid === false}>
-                <small className="invalid-feedback">
+                <small className="invalid-feedback d-block">
                         {props.validationFeedback}
                 </small>
             </Render>
