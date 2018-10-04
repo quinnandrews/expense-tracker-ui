@@ -23,6 +23,11 @@ sufficient explanation. I wanted to experiment, see what works, what doesn't, wh
 good about it, what's not so good about it, etc. 
 3. I also wanted to explore working with classes in javascript.
 
+UPDATE: Now that I have developed an implemented an HOC, I now understand why HOCs 
+are preferred over inheritance: a component can essentially be wrapped by many 
+HOCs, augmenting it in a compositional manner rather than the hierarchical manner 
+of inheritance which only permits one member of augmentation. 
+
 This app also plays around with doing something else that may not be considered good 
 practice. In some Component Classes I pass the instance to Children via props, which 
 allows me to call any method I want on the Parent Class. I was surprised that it worked. 
