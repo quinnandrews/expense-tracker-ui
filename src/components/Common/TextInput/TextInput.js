@@ -1,39 +1,35 @@
-import React from "react";
+import React, {Component} from "react";
 import PropTypes from "prop-types";
 import Converter from "../../../converters/Converter";
 import Validator from "../../../validators/Validator";
-import FormElement from "../FormElement/FormElement";
-import FormLabel from "../FormLabel/FormLabel";
-import FormGroup from "../FormGroup/FormGroup";
-import FormHelpText from "../FormHelpText/FormHelpText";
-import Render from "../Render/Render";
+import FormGroupPanel from "../FormGroupPanel/FormGroupPanel";
+import formElement from "../FormElement/FormElementHOC";
 
-class TextInput extends FormElement {
+class TextInput extends Component {
 
     render() {
         return (
-            <Render if={this.props.rendered}>
-                <FormGroup>
-                    <FormLabel label={this.props.label}
-                               elementId={this.props.id}
-                               elementRequired={this.props.required}
-                               elementValid={this.isValid()}
-                               rendered={this.props.renderLabel}/>
-                    <input type="text"
-                           className={this.getClassName()}
-                           id={this.props.id}
-                           name={this.props.id}
-                           value={this.props.value}
-                           placeholder={this.props.placeholder}
-                           required={this.props.required}
-                           maxLength={this.props.maxLength}
-                           disabled={this.props.disabled}
-                           onChange={this.valueChangeHandler}/>
-                    <FormHelpText helpText={this.props.helpText}
-                                  validationFeedback={this.getValidationFeedback()}
-                                  elementValid={this.isValid()}/>
-                </FormGroup>
-            </Render>
+            <FormGroupPanel label={this.props.label}
+                            helpText={this.props.helpText}
+                            validationFeedback={this.props.validationFeedback}
+                            elementId={this.props.id}
+                            elementValid={this.props.isValid}
+                            elementRequired={this.props.required}
+                            renderLabel={this.props.renderLabel}
+                            rendered={this.props.rendered}>
+                {this.props.prependix}
+                <input type="text"
+                       className={this.props.className}
+                       id={this.props.id}
+                       name={this.props.id}
+                       value={this.props.value}
+                       placeholder={this.props.placeholder}
+                       required={this.props.required}
+                       maxLength={this.props.maxLength}
+                       disabled={this.props.disabled}
+                       onChange={(event) => this.props.valueChangeHandler(event)}/>
+                {this.props.appendix}
+            </FormGroupPanel>
         );
     }
 
@@ -48,11 +44,16 @@ TextInput.propTypes = {
     required: PropTypes.bool,
     maxLength: PropTypes.number,
     disabled: PropTypes.bool,
+    prependix: PropTypes.any,
+    appendix: PropTypes.any,
     converter: PropTypes.instanceOf(Converter),
     validator: PropTypes.instanceOf(Validator),
     converters: PropTypes.arrayOf(Converter),
     validators: PropTypes.arrayOf(Validator),
     valueChangeHandler: PropTypes.func,
+    isValid: PropTypes.bool,
+    validationFeedback: PropTypes.string,
+    className: PropTypes.string,
     renderLabel: PropTypes.bool,
     rendered: PropTypes.bool
 };
@@ -63,4 +64,4 @@ TextInput.defaultProps = {
     rendered: true
 };
 
-export default TextInput;
+export default formElement(TextInput);
