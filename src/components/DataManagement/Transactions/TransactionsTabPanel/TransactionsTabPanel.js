@@ -4,7 +4,6 @@ import TransactionsEditPanel from "../TransactionsEditPanel/TransactionsEditPane
 import TransactionsListPanel from "../TransactionsListPanel/TransactionsListPanel";
 import PropTypes from "prop-types";
 import moment from "moment";
-import ItemsEditPanel from "../../Items/ItemsEditPanel/ItemsEditPanel";
 
 const listTab = 'listTab';
 const editTab = 'editTab';
@@ -13,6 +12,7 @@ const helpTab = 'helpTab';
 const editTabCreateLabel = 'CREATE';
 const editTabEditLabel = 'EDIT';
 
+let transactionSequence = 3;
 let transactionItemSequence = 0;
 
 class TransactionsTabPanel extends Component {
@@ -20,7 +20,6 @@ class TransactionsTabPanel extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            transactionIdSequence: 3,
             selectedTab: null,
             editTabLabel: null,
             listStateMessage: null,
@@ -310,7 +309,7 @@ class TransactionsTabPanel extends Component {
                 },
                 transactionItems: []
             };
-            const newTransactionId = ++this.state.transactionIdSequence;
+            const newTransactionId = ++transactionSequence;
             this.setTransactionId(newTransactionId);
             transaction.id = newTransactionId;
             transaction.date = this.getTransactionDate();
@@ -444,7 +443,7 @@ class TransactionsTabPanel extends Component {
             // transient object - just remove from the list
             console.log('transient')
         }
-        const deletedTransactionItem = transactionItems.splice(index, 1);
+        transactionItems.splice(index, 1);
         // TODO set some kind of message
         this.calculateTransactionItemGrandTotals(transactionItems);
         this.setTransactionItemList(transactionItems);
@@ -464,14 +463,14 @@ class TransactionsTabPanel extends Component {
     calculateTransactionItemGrandTotals(transactionItems) {
         let transactionItemCount = 0;
         let transactionItemGrandTotal = 0;
-        transactionItems.map((ti) => {
+        for (const ti of transactionItems) {
             if (ti.itemCount !== undefined) {
                 transactionItemCount = (ti.itemCount * 1) + transactionItemCount;
             }
             if (ti.subTotal !== undefined) {
                 transactionItemGrandTotal = ti.subTotal + transactionItemGrandTotal;
             }
-        });
+        }
         this.setTransactionItemCount(transactionItemCount);
         this.setTransactionItemGrandTotal(transactionItemGrandTotal);
     }
@@ -608,7 +607,7 @@ class TransactionsTabPanel extends Component {
     categoryChanged(event, index) {
         const transactionItems = [...this.getTransactionItemList()];
         const transactionItem = transactionItems[index];
-        transactionItem.categoryId = Number.parseInt(event.target.value);
+        transactionItem.categoryId = Number.parseInt(event.target.value, 10);
         this.setTransactionItemList(transactionItems);
     }
 
@@ -622,7 +621,7 @@ class TransactionsTabPanel extends Component {
     transactionItemMeasureChanged(event, index) {
         const transactionItems = [...this.getTransactionItemList()];
         const transactionItem = transactionItems[index];
-        transactionItem.measureId = Number.parseInt(event.target.value);
+        transactionItem.measureId = Number.parseInt(event.target.value, 10);
         this.calculateTransactionItemSubTotals(transactionItem);
         this.calculateTransactionItemGrandTotals(transactionItems);
         this.setTransactionItemList(transactionItems);
@@ -651,7 +650,7 @@ class TransactionsTabPanel extends Component {
     componentDidMount() {
         const idParam = this.props.idParam;
         if (idParam !== undefined) {
-            this.edit(Number.parseInt(idParam));
+            this.edit(Number.parseInt(idParam, 10));
         } else {
             this.create();
         }
@@ -670,7 +669,6 @@ class TransactionsTabPanel extends Component {
                             <a className={this.getSelectedTabClassName(listTab)}
                                id="list-tab"
                                data-toggle="tab"
-                               href="#"
                                role="tab"
                                aria-controls="list"
                                aria-selected="true"
@@ -680,7 +678,6 @@ class TransactionsTabPanel extends Component {
                             <a className={this.getSelectedTabClassName(editTab)}
                                id="editor-tab"
                                data-toggle="tab"
-                               href="#"
                                role="tab"
                                aria-controls="editor"
                                aria-selected="false"
@@ -690,7 +687,6 @@ class TransactionsTabPanel extends Component {
                             <a className={this.getSelectedTabClassName(helpTab)}
                                id="guide-tab"
                                data-toggle="tab"
-                               href="#"
                                role="tab"
                                aria-controls="guide"
                                aria-selected="false"
