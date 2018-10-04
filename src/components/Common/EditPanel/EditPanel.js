@@ -16,6 +16,7 @@ class EditPanel extends Component {
 
     constructor(props) {
         super(props);
+        console.log(props);
         this.state = {
             editStateMessage: '',
             isFormValid: true,
@@ -123,7 +124,7 @@ class EditPanel extends Component {
             }
         }
         if (isFormValid) {
-
+            // Compare fields, etc.
         }
         this.setFormValid(isFormValid);
         console.log("form.valid: " + isFormValid);
